@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Don Gato Labs — Diseño e Impresión 3D</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<link href="./output.css" rel="stylesheet">
+<style>
+:root{
+  --accent:#FF6B00;
+  --accent-soft:rgba(255,107,0,.10);
+  --accent-glow:rgba(255,107,0,.28);
+  --bg:#FFFFFF;
+  --surface:#FBFBFB;
+  --border:#EFEFEF;
+  --text:#0A0A0A;
+  --muted:#888;
+  --r:24px;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Syne',sans-serif;
+  background:var(--bg);color:var(--text);
+  overflow-x:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ── Cursor (desktop only) ─────────────── */
+@media(pointer:fine){
+  body{cursor:none;}
+  #cursor{
+    position:fixed;width:28px;height:28px;
+    border:2px solid var(--accent);border-radius:50%;
+    pointer-events:none;transform:translate(-50%,-50%);
+    transition:width .18s,height .18s,background .18s;
+    z-index:9999;mix-blend-mode:multiply;
+  }
+  #cursor.expand{width:52px;height:52px;background:var(--accent-soft);}
+  #cursor-dot{
+    position:fixed;width:5px;height:5px;
+    background:var(--accent);border-radius:50%;
+    pointer-events:none;transform:translate(-50%,-50%);
+    z-index:10000;
+  }
+  a,button{cursor:none;}
+}
+
+/* ── Progress Bar ───────────────────────── */
+#progress-bar{
+  position:fixed;top:0;left:0;height:2px;
+  background:var(--accent);z-index:10001;width:0%;
+  box-shadow:0 0 8px var(--accent-glow);
+  transition:width .08s linear;
+}
+
+/* ══════════════════════════════════════════
+   NAVBAR — LIQUID GLASS
+══════════════════════════════════════════ */
+#navbar{
+  position:fixed;top:16px;left:0;right:0;
+  z-index:1000;
+  display:flex;justify-content:center;
+  padding:0 16px;
+  pointer-events:none;
+}
+.nav-glass{
+  pointer-events:auto;
+  width:100%;max-width:1200px;
+  height:64px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 18px;
+  background:rgba(255,255,255,.22);
+  backdrop-filter:blur(20px) saturate(180%);
+  -webkit-backdrop-filter:blur(20px) saturate(180%);
+  border:1px solid rgba(255,255,255,.55);
+  border-radius:28px;
+  box-shadow:
+    0 8px 32px rgba(0,0,0,.07),
+    inset 0 1px 0 rgba(255,255,255,.75),
+    inset 0 -1px 0 rgba(255,255,255,.18);
+}
+
+/* Logo 16:9 */
+.logo-wrap{
+  flex-shrink:0;
+  width:88px;height:49.5px;
+  overflow:hidden;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.35);
+  border:1px dashed rgba(0,0,0,.13);
+}
+@media(min-width:500px){.logo-wrap{width:112px;height:63px;}}
+@media(min-width:768px){.logo-wrap{width:142px;height:80px;}}
+.logo-wrap img{width:100%;height:100%;object-fit:contain;}
+.logo-ph{
+  font-family:'Roboto Mono',monospace;
+  font-size:7px;color:rgba(0,0,0,.32);
+  text-align:center;line-height:1.5;
+}
+
+/* Desktop links */
+.nav-links{
+  display:none;
+  list-style:none;gap:28px;align-items:center;
+}
+@media(min-width:768px){.nav-links{display:flex;}}
+.nav-links a{
+  font-size:12px;font-weight:700;
+  letter-spacing:.08em;text-transform:uppercase;
+  color:rgba(0,0,0,.68);text-decoration:none;
+  transition:color .2s;
+}
+.nav-links a:hover{color:var(--accent);}
+
+/* Desktop CTA */
+.nav-cta{display:none;}
+@media(min-width:768px){
+  .nav-cta{
+    display:inline-flex;align-items:center;gap:6px;
+    background:var(--accent);color:#fff;
+    border:none;border-radius:100px;
+    padding:9px 18px;
+    font-family:'Syne',sans-serif;
+    font-size:12px;font-weight:700;
+    cursor:pointer;
+    transition:opacity .2s,transform .2s;
+    white-space:nowrap;
+  }
+  .nav-cta:hover{opacity:.88;transform:translateY(-1px);}
+}
+
+/* Hamburger */
+.hamburger{
+  display:flex;flex-direction:column;
+  justify-content:center;gap:5px;
+  background:none;border:none;
+  width:36px;height:36px;
+  padding:4px;cursor:pointer;
+}
+@media(min-width:768px){.hamburger{display:none;}}
+.hamburger span{
+  display:block;width:22px;height:2px;
+  background:var(--text);border-radius:2px;
+  transition:transform .28s,opacity .28s;
+}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0);}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+/* Mobile drawer */
+#mobile-menu{
+  display:none;
+  position:fixed;
+  top:96px;left:16px;right:16px;
+  z-index:999;
+  background:rgba(255,255,255,.94);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(255,255,255,.6);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 16px 48px rgba(0,0,0,.1);
+  flex-direction:column;gap:4px;
+}
+#mobile-menu.open{display:flex;animation:menuIn .22s ease;}
+@keyframes menuIn{
+  from{opacity:0;transform:translateY(-10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+#mobile-menu a{
+  display:block;padding:13px 16px;
+  font-size:15px;font-weight:700;
+  color:var(--text);text-decoration:none;
+  border-radius:14px;
+  transition:background .18s,color .18s;
+}
+#mobile-menu a:hover{background:var(--accent-soft);color:var(--accent);}
+.mobile-cta-link{
+  margin-top:8px;
+  background:var(--accent) !important;
+  color:#fff !important;
+  text-align:center;
+  border-radius:14px;
+}
+.mobile-cta-link:hover{opacity:.88 !important;}
+
+/* ══════════════════════════════════════════
+   HERO
+══════════════════════════════════════════ */
+#hero{
+  min-height:100svh;
+  padding-top:calc(64px + 48px);
+  padding-bottom:60px;
+  padding-left:20px;padding-right:20px;
+  display:flex;flex-direction:column;
+  justify-content:center;align-items:center;
+  text-align:center;
+  position:relative;overflow:hidden;
+}
+.hero-dots{
+  position:absolute;inset:0;
+  background-image:radial-gradient(circle,#ddd 1px,transparent 1px);
+  background-size:32px 32px;
+  opacity:.4;pointer-events:none;
+}
+.hero-eyebrow{
+  font-family:'Roboto Mono',monospace;
+  font-size:10px;letter-spacing:.22em;
+  color:var(--accent);text-transform:uppercase;
+  margin-bottom:18px;
+  opacity:0;animation:fadeUp .6s .2s forwards;
+}
+h1.hero-title{
+  font-size:clamp(50px,14vw,116px);
+  font-weight:800;line-height:1;
+  letter-spacing:-.03em;margin-bottom:14px;
+  opacity:0;animation:fadeUp .6s .35s forwards;
+}
+h1.hero-title span{color:var(--accent);}
+.hero-sub{
+  font-family:'Roboto Mono',monospace;
+  font-size:11px;color:var(--muted);
+  letter-spacing:.12em;margin-bottom:44px;
+  opacity:0;animation:fadeUp .6s .5s forwards;
+}
+
+/* Bento */
+.bento{
+  width:100%;max-width:880px;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px;
+  opacity:0;animation:fadeUp .7s .7s forwards;
+}
+@media(min-width:600px){
+  .bento{
+    grid-template-columns:repeat(5,1fr);
+    grid-template-rows:160px 130px;
+  }
+  .bento-cell:nth-child(1){grid-column:span 2;grid-row:span 2;}
+  .bento-cell:nth-child(2){grid-column:span 2;}
+  .bento-cell:nth-child(3){grid-column:span 1;}
+  .bento-cell:nth-child(4){grid-column:span 1;}
+  .bento-cell:nth-child(5){grid-column:span 2;}
+  .bento-cell:nth-child(6){grid-column:span 2;}
+}
+.bento-cell{
+  border-radius:18px;overflow:hidden;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  aspect-ratio:1/1;
+  display:flex;align-items:center;justify-content:center;
+  transition:transform .3s,box-shadow .3s;
+}
+@media(min-width:600px){.bento-cell{aspect-ratio:unset;}}
+.bento-cell:hover{
+  transform:translateY(-4px) scale(1.01);
+  box-shadow:0 16px 44px var(--accent-glow);
+}
+.bento-cell img{width:100%;height:100%;object-fit:cover;}
+.bento-ph{
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:6px;width:100%;height:100%;min-height:90px;
+}
+.bento-ph i{font-size:22px;color:#ccc;}
+.bento-ph span{font-family:'Roboto Mono',monospace;font-size:8px;color:#ccc;}
+
+/* ══════════════════════════════════════════
+   SECTIONS BASE
+══════════════════════════════════════════ */
+section{padding:76px 20px;}
+@media(min-width:768px){section{padding:100px 32px;}}
+.section-inner{max-width:1200px;margin:0 auto;}
+.section-label{
+  font-family:'Roboto Mono',monospace;
+  font-size:10px;letter-spacing:.22em;
+  text-transform:uppercase;color:var(--accent);
+  margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.section-label::before{
+  content:'';display:block;
+  width:20px;height:1.5px;background:var(--accent);
+}
+h2.section-title{
+  font-size:clamp(28px,5vw,54px);
+  font-weight:800;line-height:1.1;
+  letter-spacing:-.02em;margin-bottom:26px;
+}
+.fade-up{
+  opacity:0;transform:translateY(26px);
+  transition:opacity .65s,transform .65s;
+}
+.fade-up.visible{opacity:1;transform:translateY(0);}
+
+/* ══════════════════════════════════════════
+   QUIÉNES SOMOS
+══════════════════════════════════════════ */
+.quienes-grid{display:grid;gap:48px;}
+@media(min-width:900px){
+  .quienes-grid{grid-template-columns:1fr 1fr;gap:72px;align-items:center;}
+}
+.quienes-text p{font-size:16px;line-height:1.82;color:#333;}
+.quienes-text p strong{color:var(--accent);}
+.stat-row{display:flex;flex-wrap:wrap;gap:28px;margin-top:34px;}
+.stat-num{font-size:34px;font-weight:800;letter-spacing:-.03em;}
+.stat-num em{color:var(--accent);font-style:normal;}
+.stat-desc{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;color:var(--muted);
+  text-transform:uppercase;letter-spacing:.1em;margin-top:2px;
+}
+.feat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.feat-card{
+  border-radius:var(--r);
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  padding:22px 18px;
+  transition:border-color .2s,box-shadow .2s;
+}
+.feat-card:hover{border-color:var(--accent);box-shadow:0 8px 28px var(--accent-soft);}
+.feat-card i{font-size:19px;color:var(--accent);margin-bottom:9px;display:block;}
+.feat-card h4{font-size:13px;font-weight:700;margin-bottom:4px;}
+.feat-card p{font-size:12px;color:var(--muted);line-height:1.6;}
+.feat-card.full{grid-column:span 2;}
+
+/* ══════════════════════════════════════════
+   PRODUCTS
+══════════════════════════════════════════ */
+.products-grid{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:16px;margin-top:44px;
+}
+@media(min-width:500px){.products-grid{grid-template-columns:repeat(2,1fr);}}
+@media(min-width:900px){.products-grid{grid-template-columns:repeat(3,1fr);}}
+@media(min-width:1100px){
+  .product-card.large{grid-column:span 2;}
+}
+.product-card{
+  border-radius:var(--r);overflow:hidden;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  position:relative;
+  transition:border-color .3s,box-shadow .3s,transform .3s;
+}
+.product-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 0 36px var(--accent-glow),0 10px 36px rgba(0,0,0,.05);
+  transform:translateY(-5px);
+}
+.product-img{
+  width:100%;aspect-ratio:4/3;overflow:hidden;
+  background:#f5f5f5;
+  display:flex;align-items:center;justify-content:center;
+}
+.product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.product-card:hover .product-img img{transform:scale(1.05);}
+.prod-ph{display:flex;flex-direction:column;align-items:center;gap:8px;}
+.prod-ph i{font-size:26px;color:#ccc;}
+.prod-ph span{font-family:'Roboto Mono',monospace;font-size:8px;color:#ccc;}
+.cat-badge{
+  position:absolute;top:12px;right:12px;
+  background:rgba(255,255,255,.9);
+  border:1px solid var(--border);
+  border-radius:100px;
+  padding:3px 10px;
+  font-family:'Roboto Mono',monospace;
+  font-size:8px;letter-spacing:.1em;text-transform:uppercase;
+  backdrop-filter:blur(6px);
+}
+.product-info{padding:16px 18px 18px;}
+.prod-mono{
+  font-family:'Roboto Mono',monospace;
+  font-size:10px;font-weight:500;
+  color:var(--text);letter-spacing:.07em;margin-bottom:5px;
+}
+.prod-mono span{color:var(--accent);}
+.prod-status{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;color:var(--muted);
+  display:flex;align-items:center;gap:6px;
+}
+.led{
+  display:inline-block;width:6px;height:6px;
+  background:var(--accent);border-radius:50%;
+  animation:led 2s ease-in-out infinite;
+}
+@keyframes led{
+  0%,100%{opacity:1;box-shadow:0 0 4px var(--accent);}
+  50%{opacity:.25;box-shadow:none;}
+}
+
+/* ══════════════════════════════════════════
+   SERVICIOS
+══════════════════════════════════════════ */
+.services-grid{
+  display:grid;gap:16px;margin-top:44px;
+}
+@media(min-width:700px){.services-grid{grid-template-columns:repeat(3,1fr);}}
+.service-card{
+  border-radius:var(--r);
+  border:1.5px solid var(--border);
+  padding:34px 26px;
+  background:var(--bg);
+  position:relative;overflow:hidden;
+  transition:border-color .3s,transform .3s,box-shadow .3s;
+}
+.service-card::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--accent);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .38s;
+}
+.service-card:hover::after{transform:scaleX(1);}
+.service-card:hover{
+  border-color:var(--accent);
+  transform:translateY(-4px);
+  box-shadow:0 14px 44px var(--accent-soft);
+}
+.svc-num{
+  font-family:'Roboto Mono',monospace;
+  font-size:10px;color:var(--accent);
+  letter-spacing:.15em;margin-bottom:16px;
+}
+.svc-icon{
+  width:46px;height:46px;border-radius:13px;
+  background:var(--accent-soft);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:16px;
+}
+.svc-icon i{font-size:19px;color:var(--accent);}
+.svc-title{font-size:19px;font-weight:800;margin-bottom:11px;}
+.svc-desc{font-size:14px;line-height:1.78;color:#555;}
+
+/* ══════════════════════════════════════════
+   UBICACIÓN
+══════════════════════════════════════════ */
+#ubicacion{
+  background:var(--surface);
+  padding:52px 20px;
+}
+.ubic-inner{
+  max-width:860px;margin:0 auto;
+  display:flex;align-items:center;
+  justify-content:center;flex-wrap:wrap;gap:14px;
+}
+.ubic-pill{
+  display:inline-flex;align-items:center;gap:12px;
+  background:var(--bg);
+  border:1.5px solid var(--border);
+  border-radius:100px;
+  padding:13px 24px;
+  font-family:'Roboto Mono',monospace;
+  font-size:12px;text-align:center;
+}
+@media(max-width:460px){.ubic-pill{font-size:10px;padding:11px 16px;border-radius:18px;}}
+.ubic-pill i{color:var(--accent);flex-shrink:0;}
+
+/* ══════════════════════════════════════════
+   CONTACTO
+══════════════════════════════════════════ */
+.contact-grid{
+  display:grid;gap:16px;margin-top:44px;
+}
+@media(min-width:700px){.contact-grid{grid-template-columns:1fr 1fr;}}
+.contact-card{
+  border-radius:var(--r);
+  border:1.5px solid var(--border);
+  padding:34px 28px;
+  display:flex;flex-direction:column;gap:18px;
+  transition:border-color .3s,box-shadow .3s;
+}
+.contact-card:hover{
+  border-color:var(--accent);
+  box-shadow:0 10px 40px var(--accent-soft);
+}
+.contact-type{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;color:var(--muted);
+  letter-spacing:.22em;text-transform:uppercase;
+}
+.contact-value{
+  font-size:clamp(16px,3.5vw,24px);
+  font-weight:700;word-break:break-all;
+}
+/* Touch-friendly buttons */
+.btn-copy{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--surface);
+  border:1.5px solid var(--border);
+  border-radius:14px;padding:15px 22px;
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:600;
+  color:var(--text);cursor:pointer;
+  min-height:52px;
+  transition:border-color .2s,background .2s;
+  width:100%;justify-content:center;
+}
+@media(min-width:400px){.btn-copy{width:auto;justify-content:flex-start;}}
+.btn-copy:hover{border-color:var(--accent);background:var(--accent-soft);}
+.btn-copy.copied{border-color:#22c55e;background:rgba(34,197,94,.1);color:#22c55e;}
+.btn-wa{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg,var(--accent) 0%,#FF9A00 100%);
+  border:none;border-radius:14px;
+  padding:15px 28px;min-height:52px;
+  font-family:'Syne',sans-serif;
+  font-size:14px;font-weight:700;
+  color:#fff;text-decoration:none;
+  box-shadow:0 8px 24px rgba(255,107,0,.3);
+  transition:opacity .2s,transform .2s;
+  width:100%;
+}
+@media(min-width:400px){.btn-wa{width:auto;}}
+.btn-wa:hover{opacity:.9;transform:translateY(-2px);}
+
+/* WhatsApp float */
+#wa-float{
+  position:fixed;bottom:24px;right:20px;
+  width:54px;height:54px;border-radius:50%;
+  background:linear-gradient(135deg,var(--accent),#FF9A00);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:22px;
+  box-shadow:0 8px 24px rgba(255,107,0,.4);
+  z-index:998;text-decoration:none;
+  transition:transform .3s;
+}
+#wa-float:hover{transform:scale(1.1);}
+
+/* ══════════════════════════════════════════
+   FOOTER
+══════════════════════════════════════════ */
+footer{
+  background:var(--text);color:#888;
+  padding:28px 20px;text-align:center;
+}
+footer p{
+  font-family:'Roboto Mono',monospace;
+  font-size:11px;letter-spacing:.08em;line-height:1.9;
+}
+footer strong{color:var(--accent);}
+
+/* ── Keyframes ──────────────────────────── */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(24px);}
+  to{opacity:1;transform:translateY(0);}
+}
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+<div id="cursor"></div>
+<div id="cursor-dot"></div>
+
+<!-- WhatsApp float — reemplazá TUNUMERO -->
+<a id="wa-float"
+   href="https://wa.me/TUNUMERO?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
+   target="_blank" rel="noopener" aria-label="WhatsApp">
+  <i class="fab fa-whatsapp"></i>
+</a>
+
+<!-- ══════════════════════════════════════════
+     NAVBAR
+══════════════════════════════════════════ -->
+<div id="navbar">
+  <nav class="nav-glass">
+
+    <div class="logo-wrap" id="logoWrap">
+      <img id="logo-img" src="" alt="Don Gato Labs" style="display:none"/>
+      <span id="logo-ph" class="logo-ph">LOGO<br/>16:9</span>
+    </div>
+
+    <ul class="nav-links">
+      <li><a href="#quienes">Nosotros</a></li>
+      <li><a href="#productos">Proyectos</a></li>
+      <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <button class="nav-cta" onclick="location.href='#contacto'">
+      <i class="fas fa-cube" style="font-size:11px"></i>
+      Pedir presupuesto
+    </button>
+
+    <button class="hamburger" id="hamburger" aria-label="Menú">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+</div>
+
+<!-- Mobile Drawer -->
+<div id="mobile-menu">
+  <a href="#quienes"   onclick="closeMenu()">Nosotros</a>
+  <a href="#productos" onclick="closeMenu()">Proyectos</a>
+  <a href="#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="#ubicacion" onclick="closeMenu()">Envíos</a>
+  <a href="#contacto"  onclick="closeMenu()" class="mobile-cta-link">
+    <i class="fas fa-cube" style="margin-right:6px"></i>Pedir presupuesto
+  </a>
+</div>
+
+<!-- ══════════════════════════════════════════
+     HERO
+══════════════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-dots"></div>
+  <p class="hero-eyebrow">Diseño &amp; Impresión 3D · Posadas, Misiones</p>
+  <h1 class="hero-title">Don Gato<br/><span>Labs</span></h1>
+  <p class="hero-sub">Where your ideas take dimension.</p>
+  <div class="bento" id="hero-bento"></div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     QUIÉNES SOMOS
+══════════════════════════════════════════ -->
+<section id="quienes">
+  <div class="section-inner fade-up">
+    <div class="quienes-grid">
+      <div class="quienes-text">
+        <p class="section-label">ACERCA DE NOSOTROS</p>
+        <h2 class="section-title">Donde tus ideas<br/>toman dimensión.</h2>
+        <p>
+          Bajo la dirección de <strong>Leonel Gómez, Lic. en Diseño Industrial</strong>,
+          Don Gato Labs transforma conceptos digitales en objetos tangibles mediante
+          tecnología de impresión 3D de alta precisión. No solo imprimimos; diseñamos
+          soluciones creativas, souvenirs con identidad y piezas de iluminación con
+          un enfoque profesional.
+        </p>
+        <div class="stat-row">
+          <div>
+            <div class="stat-num">100<em>+</em></div>
+            <div class="stat-desc">Proyectos<br/>completados</div>
+          </div>
+          <div>
+            <div class="stat-num">0.2<em>mm</em></div>
+            <div class="stat-desc">Precisión<br/>de capa</div>
+          </div>
+          <div>
+            <div class="stat-num">∞</div>
+            <div class="stat-desc">Materiales<br/>disponibles</div>
+          </div>
+        </div>
+      </div>
+      <div class="feat-grid">
+        <div class="feat-card">
+          <i class="fas fa-drafting-compass"></i>
+          <h4>Diseño Industrial</h4>
+          <p>Concepto y forma con criterio profesional en cada pieza.</p>
+        </div>
+        <div class="feat-card">
+          <i class="fas fa-microchip"></i>
+          <h4>Alta Precisión</h4>
+          <p>Tecnología FDM y SLA para resultados impecables.</p>
+        </div>
+        <div class="feat-card full">
+          <i class="fas fa-box-open"></i>
+          <h4>Envíos a todo el país</h4>
+          <p>Empacamos con cuidado y enviamos por Correo Argentino a cualquier punto de Argentina.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     PRODUCTOS
+══════════════════════════════════════════ -->
+<section id="productos">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-label">GALERÍA DE PROYECTOS</p>
+      <h2 class="section-title">Nuestro trabajo,<br/>en objetos reales.</h2>
+    </div>
+    <div class="products-grid fade-up" id="products-grid"></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     SERVICIOS
+══════════════════════════════════════════ -->
+<section id="servicios">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-label">LO QUE HACEMOS</p>
+      <h2 class="section-title">Servicios a medida.</h2>
+    </div>
+    <div class="services-grid fade-up">
+      <div class="service-card">
+        <p class="svc-num">— 01</p>
+        <div class="svc-icon"><i class="fas fa-lightbulb"></i></div>
+        <h3 class="svc-title">Lámparas &amp; Decoración</h3>
+        <p class="svc-desc">Creamos piezas de iluminación únicas que juegan con la luz y la geometría. Diseños que transforman cualquier ambiente a través de texturas y materiales traslúcidos.</p>
+      </div>
+      <div class="service-card">
+        <p class="svc-num">— 02</p>
+        <div class="svc-icon"><i class="fas fa-tag"></i></div>
+        <h3 class="svc-title">Cartelería &amp; Souvenirs</h3>
+        <p class="svc-desc">Desarrollamos identidad visual física para marcas y eventos. Desde llaveros personalizados hasta cartelería técnica y decorativa con un alto nivel de detalle.</p>
+      </div>
+      <div class="service-card">
+        <p class="svc-num">— 03</p>
+        <div class="svc-icon"><i class="fas fa-cube"></i></div>
+        <h3 class="svc-title">Pedidos Personalizados</h3>
+        <p class="svc-desc">Si podés imaginarlo, podemos imprimirlo. Trabajamos mano a mano en el prototipado y fabricación de piezas especiales, repuestos o regalos únicos a pedido.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     UBICACIÓN
+══════════════════════════════════════════ -->
+<section id="ubicacion">
+  <div class="ubic-inner fade-up">
+    <div class="ubic-pill">
+      <i class="fas fa-map-marker-alt"></i>
+      <span>Posadas, Misiones, Argentina — Envíos a todo el país por Correo Argentino</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CONTACTO
+══════════════════════════════════════════ -->
+<section id="contacto">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-label">CONTACTO</p>
+      <h2 class="section-title">¿Tenés un proyecto<br/>en mente?</h2>
+    </div>
+    <div class="contact-grid fade-up">
+      <div class="contact-card">
+        <p class="contact-type">// VIA EMAIL</p>
+        <div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Escribinos directamente:</p>
+          <!-- ↓ Reemplazá con tu email -->
+          <p class="contact-value" id="email-val">hola@dongatolabs.com</p>
+        </div>
+        <button class="btn-copy" id="copy-btn" onclick="copyEmail()">
+          <i class="fas fa-copy"></i>
+          <span id="copy-label">Copiar email</span>
+        </button>
+      </div>
+      <div class="contact-card">
+        <p class="contact-type">// VIA WHATSAPP</p>
+        <div>
+          <p style="font-size:12px;color:var(--muted);margin-bottom:6px;">Respondemos rápido:</p>
+          <!-- ↓ Reemplazá con tu número real -->
+          <p class="contact-value">+54 9 XXX XXX XXXX</p>
+        </div>
+        <!-- ↓ Reemplazá TUNUMERO -->
+        <a class="btn-wa"
+           href="https://wa.me/TUNUMERO?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
+           target="_blank" rel="noopener">
+          <i class="fab fa-whatsapp" style="font-size:18px"></i>
+          Abrir WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     FOOTER
+══════════════════════════════════════════ -->
+<footer>
+  <p>Don Gato Labs <strong>©</strong> 2026 &nbsp;|&nbsp; Diseñado por <strong>Leonel Gómez</strong>, Lic. en Diseño Industrial</p>
+</footer>
+
+<script>
+/* ══════════════════════════════════════════════════════════
+   ▸ ARRAY DE PRODUCTOS
+     → Reemplazá cada `url: ""` con tu link de Supabase Storage
+     → Podés agregar o quitar objetos sin tocar nada más
+     → Las primeras 6 entradas también llenan el Bento Hero
+     → Categorías: "lampara" | "souvenir" | "carteleria" | "decoracion" | "pedido"
+══════════════════════════════════════════════════════════ */
+const productos = [
+  { url: "", titulo: "Lámpara Geo Series 01",       categoria: "lampara"     },
+  { url: "", titulo: "Llavero Corporativo Logo",     categoria: "souvenir"    },
+  { url: "", titulo: "Cartel Técnico Letras 3D",     categoria: "carteleria"  },
+  { url: "", titulo: "Pieza de Repuesto Custom",     categoria: "pedido"      },
+  { url: "", titulo: "Pantalla Hexagonal Ambient",   categoria: "lampara"     },
+  { url: "", titulo: "Escultura Decorativa Minima",  categoria: "decoracion"  },
+  { url: "", titulo: "Set Souvenirs Evento",         categoria: "souvenir"    },
+  { url: "", titulo: "Cartel Mapa Ciudad",           categoria: "carteleria"  },
+  { url: "", titulo: "Prototipo Industrial Custom",  categoria: "pedido"      },
+];
+
+/* ══════════════════════════════════════════════════════════
+   ▸ LOGO
+     → Pegá la URL de tu logo acá (proporción 16:9 recomendada)
+     → Si la dejás vacía se muestra el placeholder
+══════════════════════════════════════════════════════════ */
+const LOGO_URL = "";
+
+/* ══════════════════════════════════════════════════════════
+   RENDER BENTO HERO
+══════════════════════════════════════════════════════════ */
+function renderBento(){
+  document.getElementById('hero-bento').innerHTML =
+    productos.slice(0,6).map((p,i) =>
+      `<div class="bento-cell">${
+        p.url
+          ? `<img src="${p.url}" alt="${p.titulo}" loading="lazy"/>`
+          : `<div class="bento-ph"><i class="fas fa-cube"></i><span>IMG ${i+1}</span></div>`
+      }</div>`
+    ).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   RENDER PRODUCTS GRID
+══════════════════════════════════════════════════════════ */
+function slug(s){return s.toUpperCase().replace(/\s+/g,'_').replace(/[^A-Z0-9_]/g,'');}
+function renderProducts(){
+  document.getElementById('products-grid').innerHTML =
+    productos.map((p,i) =>
+      `<div class="product-card${i===0?' large':''}">
+        <div class="product-img">
+          ${p.url
+            ? `<img src="${p.url}" alt="${p.titulo}" loading="lazy"/>`
+            : `<div class="prod-ph"><i class="fas fa-cube"></i><span>SUPABASE URL</span></div>`}
+        </div>
+        <span class="cat-badge">${p.categoria.toUpperCase()}</span>
+        <div class="product-info">
+          <p class="prod-mono"><span>PROJECT_3D:</span> ${slug(p.titulo)}</p>
+          <p class="prod-status"><span class="led"></span>STATUS: COMPLETED — ${p.titulo}</p>
+        </div>
+      </div>`
+    ).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOGO INIT
+══════════════════════════════════════════════════════════ */
+function initLogo(){
+  if(!LOGO_URL) return;
+  const img = document.getElementById('logo-img');
+  img.src = LOGO_URL;
+  img.style.display = 'block';
+  document.getElementById('logo-ph').style.display = 'none';
+}
+
+/* ══════════════════════════════════════════════════════════
+   HAMBURGER
+══════════════════════════════════════════════════════════ */
+const hamburger  = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+hamburger.addEventListener('click', e => {
+  e.stopPropagation();
+  hamburger.classList.toggle('open');
+  mobileMenu.classList.toggle('open');
+});
+function closeMenu(){
+  hamburger.classList.remove('open');
+  mobileMenu.classList.remove('open');
+}
+document.addEventListener('click', e => {
+  if(!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
+});
+
+/* ══════════════════════════════════════════════════════════
+   PROGRESS BAR
+══════════════════════════════════════════════════════════ */
+window.addEventListener('scroll', () => {
+  const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
+  document.getElementById('progress-bar').style.width = pct + '%';
+}, {passive:true});
+
+/* ══════════════════════════════════════════════════════════
+   CUSTOM CURSOR — @media (pointer:fine)
+══════════════════════════════════════════════════════════ */
+if(window.matchMedia('(pointer:fine)').matches){
+  const cursor = document.getElementById('cursor');
+  const dot    = document.getElementById('cursor-dot');
+  let mx=-200,my=-200,cx=-200,cy=-200;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    dot.style.left=mx+'px'; dot.style.top=my+'px';
+  });
+  (function tick(){
+    cx+=(mx-cx)*.14; cy+=(my-cy)*.14;
+    cursor.style.left=cx+'px'; cursor.style.top=cy+'px';
+    requestAnimationFrame(tick);
+  })();
+  document.querySelectorAll('a,button,.product-card,.service-card,.feat-card,.bento-cell')
+    .forEach(el=>{
+      el.addEventListener('mouseenter',()=>cursor.classList.add('expand'));
+      el.addEventListener('mouseleave',()=>cursor.classList.remove('expand'));
+    });
+}
+
+/* ══════════════════════════════════════════════════════════
+   INTERSECTION OBSERVER — fade-up
+══════════════════════════════════════════════════════════ */
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}
+  });
+},{threshold:.1});
+document.querySelectorAll('.fade-up').forEach(el=>io.observe(el));
+
+/* ══════════════════════════════════════════════════════════
+   COPY EMAIL
+══════════════════════════════════════════════════════════ */
+function copyEmail(){
+  navigator.clipboard.writeText(document.getElementById('email-val').textContent.trim())
+    .then(()=>{
+      const btn   = document.getElementById('copy-btn');
+      const label = document.getElementById('copy-label');
+      btn.classList.add('copied');
+      label.textContent='¡Copiado!';
+      setTimeout(()=>{btn.classList.remove('copied');label.textContent='Copiar email';},2200);
+    });
+}
+
+/* ── INIT ─────────────────────────────────────────────── */
+renderBento();
+renderProducts();
+initLogo();
+</script>
+</body>
+</html>
