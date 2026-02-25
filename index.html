@@ -522,6 +522,7 @@ h2.section-title{
 .btn-wa:hover{opacity:.9;transform:translateY(-2px);}
 
 /* WhatsApp float */
+
 #wa-float{
   position:fixed;bottom:24px;right:20px;
   width:54px;height:54px;border-radius:50%;
@@ -561,8 +562,34 @@ footer strong{color:var(--accent);}
 <div id="cursor-dot"></div>
 
 <!-- WhatsApp float — reemplazá TUNUMERO -->
+ <!-- Instagram Float -->
+<a id="ig-float"
+   href="https://instagram.com/dongatolabs"
+   target="_blank" rel="noopener"
+   aria-label="Instagram"
+   style="
+     position:fixed; bottom:88px; right:20px;
+     width:54px; height:54px; border-radius:50%;
+     background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+     display:flex; align-items:center; justify-content:center;
+     color:#fff; font-size:22px;
+     box-shadow: 0 8px 24px rgba(238,42,123,0.4);
+     z-index:998; text-decoration:none;
+     transition:transform .3s;
+   "
+   onmouseover="this.style.transform='scale(1.1)'"
+   onmouseout="this.style.transform='scale(1)'">
+  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+       viewBox="0 0 24 24" fill="none"
+       stroke="white" stroke-width="2"
+       stroke-linecap="round" stroke-linejoin="round">
+    <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+    <circle cx="12" cy="12" r="4"/>
+    <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+  </svg>
+</a>
 <a id="wa-float"
-   href="https://wa.me/TUNUMERO?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
+   href="https://wa.me/5493765252495?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
    target="_blank" rel="noopener" aria-label="WhatsApp">
   <i class="fab fa-whatsapp"></i>
 </a>
@@ -764,6 +791,69 @@ footer strong{color:var(--accent);}
           Abrir WhatsApp
         </a>
       </div>
+      <!-- Instagram Card -->
+<div class="contact-card" style="
+  background: rgba(255,255,255,0.18);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid rgba(255,255,255,0.45);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
+">
+  <p class="contact-type">// VIA INSTAGRAM</p>
+
+  <a href="https://instagram.com/dongatolabs"
+     target="_blank" rel="noopener"
+     style="text-decoration:none; display:flex; flex-direction:column; gap:16px; flex:1;">
+
+    <div style="display:flex; align-items:center; gap:14px;">
+      <!-- Ícono Instagram SVG oficial -->
+      <div style="
+        width:48px; height:48px; border-radius:14px; flex-shrink:0;
+        background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+        display:flex; align-items:center; justify-content:center;
+        box-shadow: 0 4px 16px rgba(238,42,123,0.35);
+      ">
+        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22"
+             viewBox="0 0 24 24" fill="none"
+             stroke="white" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round">
+          <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px; color:var(--muted); margin-bottom:3px;">Seguinos en Instagram</p>
+        <p class="contact-value" style="font-size:clamp(18px,3vw,24px); background: linear-gradient(135deg,#ee2a7b,#6228d7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+          @dongatolabs
+        </p>
+      </div>
+    </div>
+
+    <div style="
+      display:inline-flex; align-items:center; gap:8px;
+      background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+      color:#fff; border-radius:14px; padding:14px 22px;
+      font-family:'Syne',sans-serif; font-size:14px; font-weight:700;
+      min-height:52px; width:100%; justify-content:center;
+      box-shadow: 0 6px 20px rgba(238,42,123,0.3);
+      transition: opacity .2s, transform .2s;
+    "
+    onmouseover="this.style.opacity='.88'; this.style.transform='translateY(-2px)'"
+    onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+           viewBox="0 0 24 24" fill="none"
+           stroke="white" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <circle cx="12" cy="12" r="4"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+      </svg>
+      Ver perfil
+    </div>
+
+  </a>
+</div>
     </div>
   </div>
 </section>
