@@ -90,11 +90,21 @@ body{
   width:88px;height:49.5px;
   overflow:hidden;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
-  background:rgba(255,255,255,.35);
+  background:transparent !important;
+  box-shadow:none !important;
+  border:0 !important;
+  z-index:50;
 }
 @media(min-width:500px){.logo-wrap{width:112px;height:63px;}}
 @media(min-width:768px){.logo-wrap{width:142px;height:80px;}}
-.logo-wrap img{width:100%;height:100%;object-fit:contain;}
+.logo-wrap img{
+  width:100%;height:100%;object-fit:contain;
+  background:transparent !important;
+  box-shadow:none !important;
+  border:0 !important;
+  mix-blend-mode:normal;
+  opacity:1;
+}
 .logo-ph{
   font-family:'Roboto Mono',monospace;
   font-size:7px;color:rgba(0,0,0,.32);
@@ -178,6 +188,10 @@ body{
   transition:background .18s,color .18s;
 }
 #mobile-menu a:hover{background:var(--accent-soft);color:var(--accent);}
+
+/* ensure target section isn’t hidden behind fixed header/menu */
+#catalogo{scroll-margin-top:96px;}
+
 .mobile-cta-link{
   margin-top:8px;
   background:var(--accent) !important;
@@ -565,12 +579,26 @@ footer strong{color:var(--accent);}
   border-color:var(--accent);
   box-shadow:0 4px 16px var(--accent-glow);
 }
+#main-filters{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  justify-content:center;
+  padding:0 1rem;
+  margin-bottom:20px;
+}
+@media(min-width:768px){
+  #main-filters{
+    flex-direction:row;
+    gap:32px;
+  }
+}
+
 .pill-main{
-  min-width:280px; /* min-w-[280px] */
-  padding:0 3rem 0 3rem; /* px-12 py-6 will be overridden by shorthand below */
-  padding:1.5rem 3rem; /* py-6 px-12 */
+  width:100%;
+  padding:0.75rem 1rem; /* px-4 py-3 */
   font-family:'Chillax',sans-serif;
-  font-size:1.125rem; /* text-lg */
+  font-size:0.875rem; /* text-sm */
   font-weight:700; /* bold */
   letter-spacing:0.2em; /* tracking-[0.2em] */
   text-transform:uppercase;
@@ -581,6 +609,13 @@ footer strong{color:var(--accent);}
   border:2px solid rgba(255,107,0,0.3); /* border-2 border-orange-400/30 */
   border-radius:1rem; /* rounded-2xl approx */
   transition:all .3s;
+}
+@media(min-width:768px){
+  .pill-main{
+    min-width:250px;
+    padding:1.25rem 2.5rem; /* md:px-10 md:py-5 */
+    font-size:1.125rem; /* md:text-lg */
+  }
 }
 .pill-main:hover{
   transform:scale(1.05);
@@ -768,10 +803,10 @@ footer strong{color:var(--accent);}
      NAVBAR
 ══════════════════════════════════════════ -->
 <div id="navbar">
-  <nav class="nav-glass">
+  <nav class="nav-glass bg-transparent bg-none shadow-none drop-shadow-none border-0">
 
-    <div class="logo-wrap" id="logoWrap">
-      <img id="logo-img" src="" alt="Don Gato Labs" style="display:none"/>
+    <div class="logo-wrap bg-transparent bg-none shadow-none drop-shadow-none border-0 z-50" id="logoWrap">
+      <img id="logo-img" src="" alt="Don Gato Labs" class="bg-transparent bg-none shadow-none drop-shadow-none border-0 mix-blend-normal z-50" style="display:none;opacity:1;"/>
       <span id="logo-ph" class="logo-ph">LOGO<br/>16:9</span>
     </div>
 
@@ -799,6 +834,7 @@ footer strong{color:var(--accent);}
   <a href="#quienes"   onclick="closeMenu()">Nosotros</a>
   <a href="#productos" onclick="closeMenu()">Proyectos</a>
   <a href="#servicios" onclick="closeMenu()">Servicios</a>
+  <a href="#catalogo" onclick="closeMenu()">Catálogo</a>
   <a href="#ubicacion" onclick="closeMenu()">Envíos</a>
   <a href="#contacto"  onclick="closeMenu()" class="mobile-cta-link">
     <i class="fas fa-cube" style="margin-right:6px"></i>Pedir presupuesto
@@ -921,7 +957,7 @@ footer strong{color:var(--accent);}
         Todos fabricados a pedido · Envíos a todo el país
       </p>
     </div>
-    <div id="main-filters" style="display:flex;gap:32px;justify-content:center;margin-bottom:20px;">
+    <div id="main-filters">
       <button class="pill-main active" onclick="filterMain('mobiliario',this)">MOBILIARIO</button>
       <button class="pill-main" onclick="filterMain('3d',this)">IMPRESIONES 3D</button>
     </div>
@@ -1084,7 +1120,7 @@ const productos = [
      → Pegá la URL de tu logo acá (proporción 16:9 recomendada)
      → Si la dejás vacía se muestra el placeholder
 ══════════════════════════════════════════════════════════ */
-const LOGO_URL = "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGOS%20DG%20LABS%20FINALES.png";
+const LOGO_URL = "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGO%20OPTIMO.png";
 
 /* ══════════════════════════════════════════════════════════
    RENDER BENTO HERO
