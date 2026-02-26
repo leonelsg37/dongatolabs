@@ -1067,20 +1067,27 @@
       width: 54px;
       height: 54px;
       border-radius: 50%;
-      background: linear-gradient(135deg, var(--accent), #FF9A00);
+      background: rgba(37, 211, 102, 0.15);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(37, 211, 102, 0.4);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      font-size: 22px;
-      box-shadow: 0 8px 24px rgba(255, 107, 0, .4);
+      color: #25D366;
+      font-size: 26px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       z-index: 998;
       text-decoration: none;
-      transition: transform .3s;
+      transition: all .3s ease;
     }
 
     #wa-float:hover {
       transform: scale(1.1);
+      background: rgba(37, 211, 102, 0.25);
+      color: #fff;
+      border-color: rgba(37, 211, 102, 0.6);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.2);
     }
 
     /* ══════════════════════════════════════════
@@ -1394,7 +1401,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 16px;
+      padding: 8px;
     }
 
     #qv-overlay.open {
@@ -1438,19 +1445,21 @@
     }
 
     .qv-grid {
-      display: grid;
-      grid-template-columns: 1fr;
+      display: flex;
+      flex-direction: column;
     }
 
     @media(min-width:700px) {
       .qv-grid {
-        grid-template-columns: 1fr 1fr;
+        flex-direction: row;
       }
     }
 
     .qv-img-area {
       position: relative;
-      min-height: 260px;
+      width: 100%;
+      min-height: 320px;
+      aspect-ratio: 1 / 1;
       border-radius: 28px 28px 0 0;
       overflow: hidden;
       background: rgba(0, 0, 0, 0.25);
@@ -1458,8 +1467,10 @@
 
     @media(min-width:700px) {
       .qv-img-area {
+        width: 50%;
         border-radius: 28px 0 0 28px;
         min-height: 380px;
+        aspect-ratio: auto;
       }
     }
 
@@ -1567,12 +1578,14 @@
     .qv-info {
       display: flex;
       flex-direction: column;
-      gap: 18px;
-      padding: 24px 24px 28px;
+      gap: 16px;
+      padding: 16px;
+      width: 100%;
     }
 
     @media(min-width:700px) {
       .qv-info {
+        width: 50%;
         padding: 32px;
       }
     }
@@ -1715,8 +1728,8 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 40px;
-      height: 40px;
+      width: 48px;
+      height: 48px;
       background: rgba(255, 255, 255, 0.12);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 50%;
@@ -1724,7 +1737,7 @@
       align-items: center;
       justify-content: center;
       color: #fff;
-      font-size: 20px;
+      font-size: 24px;
       cursor: pointer;
       opacity: .7;
       transition: opacity .18s, background .18s;
