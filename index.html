@@ -671,6 +671,197 @@ footer strong{color:var(--accent);}
 @keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 .cart-items::-webkit-scrollbar{width:4px;}
 .cart-items::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px;}
+
+/* ── QUICK VIEW MODAL ── */
+#qv-overlay{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
+  z-index:2000;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s ease;
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;
+}
+#qv-overlay.open{
+  opacity:1;pointer-events:auto;
+}
+#qv-modal{
+  position:relative;
+  width:100%;max-width:860px;
+  max-height:90vh;overflow-y:auto;
+  border-radius:28px;
+  background:rgba(255,255,255,0.08);
+  backdrop-filter:blur(40px) saturate(180%);
+  -webkit-backdrop-filter:blur(40px) saturate(180%);
+  border:1px solid rgba(255,255,255,0.18);
+  box-shadow:0 32px 80px rgba(0,0,0,0.45),inset 0 1px 0 rgba(255,255,255,0.25);
+  transform:scale(.94) translateY(16px);
+  opacity:0;
+  transition:transform .32s cubic-bezier(0.34,1.56,0.64,1), opacity .28s ease;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(255,255,255,0.15) transparent;
+  z-index:100; /* ensure above glass */
+}
+#qv-overlay.open #qv-modal{
+  transform:scale(1) translateY(0);
+  opacity:1;
+}
+#qv-modal::-webkit-scrollbar{width:4px;}
+#qv-modal::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.15);border-radius:2px;}
+.qv-grid{
+  display:grid;
+  grid-template-columns:1fr;
+}
+@media(min-width:700px){
+  .qv-grid{grid-template-columns:1fr 1fr;}
+}
+.qv-img-area{
+  position:relative;
+  min-height:260px;
+  border-radius:28px 28px 0 0;
+  overflow:hidden;
+  background:rgba(0,0,0,0.25);
+}
+@media(min-width:700px){
+  .qv-img-area{
+    border-radius:28px 0 0 28px;
+    min-height:380px;
+  }
+}
+.qv-img-area img{
+  width:100%;height:100%;
+  object-fit:cover;
+  display:block;
+  animation:qvImgIn .28s ease forwards;
+}
+@keyframes qvImgIn{
+  from{opacity:0;transform:scale(1.04)}
+  to{opacity:1;transform:scale(1)}
+}
+.qv-no-img{
+  width:100%;height:100%;min-height:260px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:10px;color:rgba(255,255,255,0.18);
+  font-family:'Roboto Mono',monospace;font-size:10px;
+  letter-spacing:.15em;text-transform:uppercase;
+}
+.qv-img-gradient{
+  position:absolute;bottom:0;left:0;right:0;height:100px;
+  background:linear-gradient(to top,rgba(0,0,0,0.55),transparent);
+  pointer-events:none;
+}
+.qv-badge-cat{
+  position:absolute;top:14px;left:14px;
+  padding:4px 12px;border-radius:100px;
+  color:#fff;font-family:'Roboto Mono',monospace;
+  font-size:9px;letter-spacing:.15em;text-transform:uppercase;
+  background:rgba(255,107,0,0.88);
+  backdrop-filter:blur(8px);
+}
+.qv-badge-etiqueta{
+  position:absolute;top:14px;right:48px;
+  padding:4px 12px;border-radius:100px;
+  color:#fff;font-family:'Roboto Mono',monospace;
+  font-size:9px;letter-spacing:.12em;text-transform:uppercase;
+  background:rgba(255,255,255,0.15);
+  border:1px solid rgba(255,255,255,0.25);
+  backdrop-filter:blur(8px);
+}
+.qv-close{
+  position:absolute;top:14px;right:14px;z-index:10;
+  width:34px;height:34px;border-radius:50%;
+  background:rgba(255,255,255,0.13);
+  border:1px solid rgba(255,255,255,0.22);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:rgba(255,255,255,0.7);
+  transition:color .18s,background .18s;
+  flex-shrink:0;
+}
+.qv-close:hover{color:#fff;background:rgba(255,255,255,0.22);}
+.qv-info{
+  display:flex;flex-direction:column;gap:18px;
+  padding:24px 24px 28px;
+}
+@media(min-width:700px){.qv-info{padding:32px;}}
+.qv-eyebrow{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,0.38);
+}
+.qv-titulo{
+  font-family:'Syne',sans-serif;
+  font-size:clamp(20px,3.5vw,30px);
+  font-weight:800;line-height:1.15;
+  color:#fff;letter-spacing:-.02em;
+}
+.qv-precio-wrap{
+  display:flex;align-items:baseline;gap:6px;
+}
+.qv-precio-moneda{
+  font-family:'Roboto Mono',monospace;
+  font-size:12px;color:rgba(255,255,255,0.38);
+}
+.qv-precio-num{
+  font-family:'Roboto Mono',monospace;
+  font-size:clamp(26px,4vw,36px);
+  font-weight:700;color:#fff;
+}
+.qv-precio-consultar{
+  font-family:'Syne',sans-serif;
+  font-size:22px;font-weight:800;color:#ff6b00;
+}
+.qv-divider{
+  height:1px;background:rgba(255,255,255,0.1);
+  flex-shrink:0;
+}
+.qv-desc{
+  font-size:13px;line-height:1.78;
+  color:rgba(255,255,255,0.62);
+}
+.qv-specs-label{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;letter-spacing:.22em;
+  text-transform:uppercase;color:rgba(255,255,255,0.35);
+  margin-bottom:10px;
+}
+.qv-spec-row{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:8px 0;
+  border-bottom:1px solid rgba(255,255,255,0.07);
+}
+.qv-spec-key{
+  font-family:'Roboto Mono',monospace;
+  font-size:9px;letter-spacing:.12em;
+  text-transform:uppercase;color:rgba(255,255,255,0.4);
+}
+.qv-spec-val{
+  font-size:12px;font-weight:600;
+  color:#fff;text-align:right;margin-left:12px;
+}
+.qv-btn-wa{
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  width:100%;padding:15px;min-height:52px;
+  border-radius:16px;border:none;cursor:pointer;
+  font-family:'Syne',sans-serif;font-size:14px;font-weight:700;
+  color:#fff;text-decoration:none;
+  background:linear-gradient(135deg,#ff6b00,#ff9a00);
+  box-shadow:0 8px 24px rgba(255,107,0,0.38);
+  transition:opacity .2s,transform .2s;
+}
+.qv-btn-wa:hover{opacity:.9;transform:translateY(-2px);}
+.qv-btn-close-text{
+  width:100%;padding:11px;
+  border-radius:14px;border:1.5px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.05);
+  font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+  color:rgba(255,255,255,0.45);cursor:pointer;
+  transition:color .2s,border-color .2s;
+}
+.qv-btn-close-text:hover{color:rgba(255,255,255,0.75);border-color:rgba(255,255,255,0.22);}
+
 </style>
 </head>
 <body>
@@ -793,6 +984,71 @@ footer strong{color:var(--accent);}
     ">Vaciar carrito</button>
   </div>
 </div>
+<!-- ══ QUICK VIEW MODAL ══ -->
+<div id="qv-overlay" role="dialog" aria-modal="true" aria-label="Vista rápida del producto">
+  <div id="qv-modal">
+    <div class="qv-grid">
+
+      <!-- Imagen -->
+      <div class="qv-img-area" id="qv-img-area">
+        <div class="qv-no-img" id="qv-no-img">
+          <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1">
+            <rect x="3" y="3" width="18" height="18" rx="2"/>
+            <circle cx="8.5" cy="8.5" r="1.5"/>
+            <path d="M21 15l-5-5L5 21"/>
+          </svg>
+          <span>Sin imagen</span>
+        </div>
+        <img id="qv-img" src="" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
+        <div class="qv-img-gradient"></div>
+        <span class="qv-badge-cat" id="qv-badge-cat"></span>
+        <span class="qv-badge-etiqueta" id="qv-badge-etiqueta" style="display:none;"></span>
+        <button class="qv-close" id="qv-close-img" onclick="closeQuickView()" aria-label="Cerrar">
+          <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
+            <path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Info -->
+      <div class="qv-info">
+        <div>
+          <p class="qv-eyebrow">— DON GATO LABS</p>
+          <h2 class="qv-titulo" id="qv-titulo">—</h2>
+        </div>
+
+        <div class="qv-precio-wrap" id="qv-precio-wrap">
+          <!-- poblado por JS -->
+        </div>
+
+        <div class="qv-divider"></div>
+
+        <p class="qv-desc" id="qv-desc">—</p>
+
+        <div>
+          <p class="qv-specs-label">Especificaciones</p>
+          <div id="qv-specs">
+            <!-- poblado por JS -->
+          </div>
+        </div>
+
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:auto;">
+          <a id="qv-btn-wa" href="#" target="_blank" rel="noopener" class="qv-btn-wa">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Consultar por WhatsApp
+          </a>
+          <button class="qv-btn-close-text" onclick="closeQuickView()">
+            Seguir viendo catálogo
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <a id="wa-float"
    href="https://wa.me/5493765252495?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
    target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -1337,7 +1593,22 @@ function renderProducts(list){
       ? `$<em>${p.precio.toLocaleString('es-AR')}</em>`
       : `<em>Consultar</em>`;
     return `
-    <div class="product-card">
+    <div class="product-card group relative" onclick="openQuickView(${p.id})" style="cursor:pointer;">
+      <div class="cat-card-overlay" style="
+        position:absolute;inset:0;z-index:2;
+        display:flex;align-items:flex-end;justify-content:center;
+        padding-bottom:18px;
+        background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 55%);
+        opacity:0;transition:opacity .28s;
+      ">
+        <span style="
+          padding:6px 18px;border-radius:100px;
+          color:#fff;font-family:'Roboto Mono',monospace;
+          font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+          background:rgba(255,107,0,0.92);
+          backdrop-filter:blur(8px);
+        ">VER MÁS</span>
+      </div>
       <div class="product-img">
         ${p.imagen_url
           ? `<img src="${p.imagen_url}" alt="${p.titulo}" loading="lazy"/>`
@@ -1349,7 +1620,7 @@ function renderProducts(list){
         <p class="product-desc">${p.etiqueta||''}</p>
         <p class="product-price">${precioStr}</p>
         <button class="btn-add${inCart>0?' added':''}"
-                onclick="addToCart(${p.id})" id="btn-${p.id}">
+                onclick="event.stopPropagation(); addToCart(${p.id})" id="btn-${p.id}">
           <i class="fas ${inCart>0?'fa-check':'fa-plus'}"></i>
           ${inCart>0?`En carrito (${inCart})`:'Agregar al carrito'}
         </button>
@@ -1357,6 +1628,93 @@ function renderProducts(list){
     </div>`;
   }).join('');
 }
+
+// Quick View logic
+function openQuickView(id){
+  try {
+    const producto = products.find(p=>p.id===id);
+    console.log('Producto clickeado:', producto);
+    if(!producto) throw new Error('Producto no encontrado');
+
+    const placeholder = 'https://via.placeholder.com/400x300?text=Sin+imagen';
+
+    const imgEl    = document.getElementById('qv-img');
+    const noImgEl  = document.getElementById('qv-no-img');
+    if(producto.imagen_url){
+      imgEl.src = producto.imagen_url;
+      imgEl.alt = producto.titulo || '';
+      imgEl.style.display='block';
+      noImgEl.style.display='none';
+    } else {
+      imgEl.src = placeholder;
+      imgEl.alt = 'Sin imagen';
+      imgEl.style.display='block';
+      noImgEl.style.display='none';
+    }
+
+    const badgeCat = document.getElementById('qv-badge-cat');
+    badgeCat.textContent = producto.categoria||'';
+    badgeCat.style.display = producto.categoria?'inline-block':'none';
+
+    const badgeEtiq = document.getElementById('qv-badge-etiqueta');
+    badgeEtiq.textContent = producto.etiqueta||'';
+    badgeEtiq.style.display = producto.etiqueta?'inline-block':'none';
+
+    document.getElementById('qv-titulo').textContent = producto.titulo||'—';
+
+    const precioWrap = document.getElementById('qv-precio-wrap');
+    if(producto.precio>0){
+      precioWrap.innerHTML = `
+        <span class="qv-precio-moneda">ARS</span>
+        <span class="qv-precio-num">$${Number(producto.precio).toLocaleString('es-AR')}</span>`;
+    } else {
+      precioWrap.innerHTML = `<span class="qv-precio-consultar">Consultar precio</span>`;
+    }
+
+    document.getElementById('qv-desc').textContent =
+      producto.descripcion || 'Descripción no disponible.';
+
+    const specs = [
+      { label:'Categoría', value:producto.categoria },
+      { label:'Etiqueta',  value:producto.etiqueta },
+      { label:'ID Pieza',  value:`#${String(producto.id).padStart(4,'0')}` }
+    ].filter(s=>s.value);
+    document.getElementById('qv-specs').innerHTML = specs.map(s=>`
+      <div class="qv-spec-row">
+        <span class="qv-spec-key">${s.label}</span>
+        <span class="qv-spec-val">${s.value}</span>
+      </div>`).join('');
+
+    const msg = encodeURIComponent(
+      `Hola Don Gato Labs! 👋 Me interesa el *${producto.titulo}*. ¿Podés darme más info y presupuesto?`
+    );
+    document.getElementById('qv-btn-wa').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
+
+    document.body.style.overflow='hidden';
+    document.getElementById('qv-overlay').classList.add('open');
+  } catch(err){
+    console.error('Error en openQuickView', err);
+    // still try to open overlay with whatever we have
+    document.getElementById('qv-overlay').classList.add('open');
+  }
+}
+
+function closeQuickView(){
+  document.getElementById('qv-overlay').classList.remove('open');
+  document.body.style.overflow='';
+}
+
+// cerrar al hacer clic fuera del modal
+const _qvOverlay = document.getElementById('qv-overlay');
+if(_qvOverlay){
+  _qvOverlay.addEventListener('click', e=>{
+    if(e.target===_qvOverlay) closeQuickView();
+  });
+}
+// cerrar con Escape
+document.addEventListener('keydown', e=>{
+  if(e.key==='Escape') closeQuickView();
+});
 
 // existing filterCat kept for backwards compatibility (no longer used)
 function filterCat(cat,btn){
