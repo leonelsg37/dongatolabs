@@ -2473,22 +2473,7 @@
     function renderProducts() {
       document.getElementById('products-grid').innerHTML =
         productos.map((p, i) =>
-          `<div class="product-card${i === 0 ? ' large' : ''} group relative" onclick="openQuickView(${p.id || 0})">
-        <div class="cat-card-overlay" style="
-          position:absolute;inset:0;z-index:2;
-          display:flex;align-items:flex-end;justify-content:center;
-          padding-bottom:18px;
-          background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 55%);
-          opacity:0;transition:opacity .28s;
-        ">
-          <span style="
-            padding:6px 18px;border-radius:100px;
-            color:#fff;font-family:'Roboto Mono',monospace;
-            font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
-            background:rgba(255,107,0,0.92);
-            backdrop-filter:blur(8px);
-          ">VER MÁS</span>
-        </div>
+          `<div class="product-card${i === 0 ? ' large' : ''} group relative">
         <div class="product-img">
           ${p.url
             ? `<img src="${p.url}" alt="${p.titulo}" loading="lazy"/>`
@@ -2498,7 +2483,6 @@
         <div class="product-info">
           <p class="prod-mono"><span>PROJECT_3D:</span> ${slug(p.titulo)}</p>
           <p class="prod-status"><span class="led"></span>STATUS: COMPLETED — ${p.titulo}</p>
-          <button class="btn-vermas" onclick="event.stopPropagation(); openQuickView(${p.id || 0})">Ver más</button>
         </div>
       </div>`
         ).join('');
