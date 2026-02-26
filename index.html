@@ -236,11 +236,12 @@ h1.hero-title span{color:#FF6B00;}
   grid-template-columns:repeat(2,1fr);
   gap:10px;
   opacity:0;animation:fadeUp .7s .7s forwards;
+  align-items:start;
 }
 @media(min-width:600px){
   .bento{
     grid-template-columns:repeat(5,1fr);
-    grid-template-rows:160px 130px;
+    align-items:start;
   }
   .bento-cell:nth-child(1){grid-column:span 2;grid-row:span 2;}
   .bento-cell:nth-child(2){grid-column:span 2;}
@@ -253,16 +254,15 @@ h1.hero-title span{color:#FF6B00;}
   border-radius:18px;overflow:hidden;
   background:var(--surface);
   border:1.5px solid var(--border);
-  aspect-ratio:1/1;
   display:flex;align-items:center;justify-content:center;
   transition:transform .3s,box-shadow .3s;
+  height:fit-content;
 }
-@media(min-width:600px){.bento-cell{aspect-ratio:unset;}}
 .bento-cell:hover{
   transform:translateY(-4px) scale(1.01);
   box-shadow:0 16px 44px var(--accent-glow);
 }
-.bento-cell img{width:100%;height:100%;object-fit:cover;}
+.bento-cell img{width:100%;height:auto;}
 .bento-ph{
   display:flex;flex-direction:column;
   align-items:center;justify-content:center;
@@ -270,7 +270,6 @@ h1.hero-title span{color:#FF6B00;}
 }
 .bento-ph i{font-size:22px;color:#ccc;}
 .bento-ph span{font-family:'Roboto Mono',monospace;font-size:8px;color:#ccc;}
-
 /* ══════════════════════════════════════════
    SECTIONS BASE
 ══════════════════════════════════════════ */
@@ -356,11 +355,11 @@ h2.section-title{
   transform:translateY(-5px);
 }
 .product-img{
-  width:100%;aspect-ratio:4/3;overflow:hidden;
+  width:100%;overflow:hidden;
   background:#f5f5f5;
   display:flex;align-items:center;justify-content:center;
 }
-.product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.product-img img{width:100%;height:auto;transition:transform .4s;}
 .product-card:hover .product-img img{transform:scale(1.05);}
 .prod-ph{display:flex;flex-direction:column;align-items:center;gap:8px;}
 .prod-ph i{font-size:26px;color:#ccc;}
@@ -554,6 +553,60 @@ footer strong{color:var(--accent);}
   from{opacity:0;transform:translateY(24px);}
   to{opacity:1;transform:translateY(0);}
 }
+.pill{
+  padding:8px 18px;border-radius:100px;
+  font-size:12px;font-weight:700;letter-spacing:.05em;
+  border:1.5px solid var(--border);
+  background:var(--surface);cursor:pointer;
+  transition:all .2s;color:var(--text);
+}
+.pill:hover,.pill.active{
+  background:var(--accent);color:#fff;
+  border-color:var(--accent);
+  box-shadow:0 4px 16px var(--accent-glow);
+}
+.product-card{
+  border-radius:var(--r);overflow:hidden;
+  background:rgba(255,255,255,.55);
+  backdrop-filter:blur(14px) saturate(160%);
+  -webkit-backdrop-filter:blur(14px) saturate(160%);
+  border:1px solid rgba(255,255,255,.65);
+  box-shadow:0 4px 24px rgba(0,0,0,.07),inset 0 1px 0 rgba(255,255,255,.8);
+  transition:transform .3s,box-shadow .3s;
+  display:flex;flex-direction:column;
+}
+.product-card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 0 36px var(--accent-glow),0 12px 40px rgba(0,0,0,.08);
+}
+.product-img{
+  width:100%;aspect-ratio:4/3;overflow:hidden;
+  background:#e8e8e8;display:flex;align-items:center;justify-content:center;position:relative;
+}
+.product-img img{width:100%;height:100%;object-fit:cover;transition:transform .4s;}
+.product-card:hover .product-img img{transform:scale(1.05);}
+.product-img-ph{display:flex;flex-direction:column;align-items:center;gap:8px;color:#bbb;}
+.product-img-ph i{font-size:32px;}
+.product-body{padding:16px 18px 18px;display:flex;flex-direction:column;gap:10px;flex:1;}
+.product-name{font-size:15px;font-weight:700;}
+.product-desc{font-size:12px;color:var(--muted);line-height:1.55;flex:1;}
+.product-price{font-family:'Roboto Mono',monospace;font-size:16px;font-weight:500;}
+.product-price em{font-style:normal;color:var(--accent);}
+.btn-add{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+  background:var(--accent);color:#fff;border:none;border-radius:12px;
+  padding:12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;transition:opacity .2s,transform .2s;
+  box-shadow:0 4px 16px var(--accent-glow);
+}
+.btn-add:hover{opacity:.88;transform:translateY(-1px);}
+.btn-add.added{background:#22c55e;box-shadow:0 4px 16px rgba(34,197,94,.3);}
+.skel-img{width:100%;aspect-ratio:4/3;background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+.skel-line{height:12px;border-radius:6px;margin:12px 18px 0;background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
+.skel-line.short{width:50%;margin-bottom:16px;}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+.cart-items::-webkit-scrollbar{width:4px;}
+.cart-items::-webkit-scrollbar-thumb{background:rgba(0,0,0,.15);border-radius:2px;}
 </style>
 </head>
 <body>
@@ -589,6 +642,93 @@ footer strong{color:var(--accent);}
     <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
   </svg>
 </a>
+<!-- ── TOAST ── -->
+<div id="toast" style="
+  position:fixed;bottom:90px;left:50%;
+  transform:translateX(-50%) translateY(20px);
+  background:rgba(10,10,10,.88);color:#fff;
+  border-radius:100px;padding:10px 22px;
+  font-size:13px;font-weight:600;
+  z-index:2000;opacity:0;pointer-events:none;
+  transition:opacity .25s,transform .25s;
+  white-space:nowrap;backdrop-filter:blur(8px);
+"></div>
+
+<!-- ── CART FLOAT ── -->
+<button id="cart-float" onclick="openCart()" aria-label="Ver carrito" style="
+  position:fixed;bottom:156px;right:20px;
+  width:56px;height:56px;border-radius:50%;
+  background:var(--accent);color:#fff;border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:22px;
+  box-shadow:0 8px 24px var(--accent-glow);z-index:900;
+  transition:transform .3s;
+">
+  <i class="fas fa-shopping-bag"></i>
+  <span id="cart-badge" style="
+    position:absolute;top:-4px;right:-4px;
+    background:#ef4444;color:#fff;
+    width:20px;height:20px;border-radius:50%;
+    font-family:'Roboto Mono',monospace;font-size:10px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    border:2px solid #f0f0f0;opacity:0;transform:scale(0);
+    transition:opacity .2s,transform .2s;
+  ">0</span>
+</button>
+
+<!-- ── CART OVERLAY ── -->
+<div id="cart-overlay" onclick="closeCart()" style="
+  position:fixed;inset:0;background:rgba(0,0,0,.35);
+  backdrop-filter:blur(4px);z-index:1000;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+"></div>
+
+<!-- ── CART PANEL ── -->
+<div id="cart-panel" style="
+  position:fixed;top:0;right:0;bottom:0;
+  width:min(420px,100vw);
+  background:rgba(255,255,255,.75);
+  backdrop-filter:blur(28px) saturate(180%);
+  -webkit-backdrop-filter:blur(28px) saturate(180%);
+  border-left:1px solid rgba(255,255,255,.6);
+  box-shadow:-16px 0 48px rgba(0,0,0,.12),inset 1px 0 0 rgba(255,255,255,.8);
+  z-index:1001;display:flex;flex-direction:column;
+  transform:translateX(100%);
+  transition:transform .35s cubic-bezier(.4,0,.2,1);
+">
+  <div style="padding:24px 24px 16px;border-bottom:1px solid rgba(0,0,0,.07);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;">
+    <div style="font-size:20px;font-weight:800;">
+      Tu pedido
+      <span id="cart-count-label" style="font-family:'Roboto Mono',monospace;font-size:11px;color:var(--muted);font-weight:400;margin-left:8px;">0 items</span>
+    </div>
+    <button onclick="closeCart()" style="background:rgba(0,0,0,.07);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  <div class="cart-items" id="cart-items" style="flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:12px;"></div>
+  <div id="cart-footer" style="display:none;padding:16px 24px 24px;border-top:1px solid rgba(0,0,0,.07);flex-shrink:0;flex-direction:column;gap:12px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:13px;color:var(--muted);">Subtotal estimado</span>
+      <strong style="font-family:'Roboto Mono',monospace;font-size:18px;">$<span id="cart-total" style="color:var(--accent);">0</span></strong>
+    </div>
+    <button onclick="sendToWhatsApp()" style="
+      width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+      background:linear-gradient(135deg,#25D366,#128C7E);
+      color:#fff;border:none;border-radius:16px;padding:16px;
+      font-family:'Syne',sans-serif;font-size:15px;font-weight:700;cursor:pointer;
+      box-shadow:0 6px 20px rgba(37,211,102,.35);min-height:54px;
+      transition:opacity .2s,transform .2s;
+    ">
+      <i class="fab fa-whatsapp" style="font-size:20px"></i>
+      Enviar Pedido por WhatsApp
+    </button>
+    <button onclick="clearCart()" style="
+      width:100%;background:none;border:1.5px solid rgba(0,0,0,.1);
+      border-radius:12px;padding:10px;
+      font-family:'Syne',sans-serif;font-size:12px;font-weight:600;
+      color:var(--muted);cursor:pointer;
+    ">Vaciar carrito</button>
+  </div>
+</div>
 <a id="wa-float"
    href="https://wa.me/5493765252495?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
    target="_blank" rel="noopener" aria-label="WhatsApp">
@@ -610,6 +750,7 @@ footer strong{color:var(--accent);}
       <li><a href="#quienes">Nosotros</a></li>
       <li><a href="#productos">Proyectos</a></li>
       <li><a href="#servicios">Servicios</a></li>
+      <li><a href="#catalogo">Catálogo</a></li>
       <li><a href="#contacto">Contacto</a></li>
     </ul>
 
@@ -740,6 +881,33 @@ footer strong{color:var(--accent);}
 </section>
 
 <!-- ══════════════════════════════════════════
+     CATÁLOGO
+══════════════════════════════════════════ -->
+<section id="catalogo">
+  <div class="section-inner">
+    <div class="fade-up">
+      <p class="section-label">CATÁLOGO</p>
+      <h2 class="section-title">Nuestros<br/>Productos</h2>
+      <p style="font-size:14px;color:var(--muted);margin-bottom:28px;">
+        Todos fabricados a pedido · Envíos a todo el país
+      </p>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;" id="filters">
+      <button class="pill active" onclick="filterCat('todos',this)">Todos</button>
+      <button class="pill" onclick="filterCat('Lámpara 3D',this)">Lámpara 3D</button>
+      <button class="pill" onclick="filterCat('Souvenir',this)">Souvenir</button>
+      <button class="pill" onclick="filterCat('Cartelería',this)">Cartelería</button>
+      <button class="pill" onclick="filterCat('Pedido Custom',this)">Custom</button>
+    </div>
+    <div id="catalog-grid" style="
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(260px,1fr));
+      gap:20px;
+    "></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
      UBICACIÓN
 ══════════════════════════════════════════ -->
 <section id="ubicacion">
@@ -800,7 +968,7 @@ footer strong{color:var(--accent);}
 
   <a href="https://instagram.com/dongatolabs"
      target="_blank" rel="noopener"
-     style="text-decoration:none; display:flex; flex-direction:column; gap:16px; flex:1;">
+     style="text-decoration:none; display:flex; flex-direction:column; gap:16px;">
 
     <div style="display:flex; align-items:center; gap:14px;">
       <!-- Ícono Instagram SVG oficial -->
@@ -1013,6 +1181,238 @@ function copyEmail(){
 renderBento();
 renderProducts();
 initLogo();
+</script>
+
+<script>
+/* ══════ CONFIG — reemplazá con tus datos reales ══════ */
+const WA_NUMBER    = "5493765252495";        // ej: 5493764000000
+const SUPABASE_URL = "https://rfgemfdmjetzimidozaw.supabase.co"; // ej: https://abc123.supabase.co
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJmZ2VtZmRtamV0emltaWRvemF3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzIwNDU3NzMsImV4cCI6MjA4NzYyMTc3M30.NzcqpZmTFl7tGfEeae1futDHzMFGee6zmA7bpa4EzKs";     // clave anon pública de Supabase
+
+/* ══════ STATE ══════ */
+let products      = [];
+let cart          = {};
+let currentFilter = 'todos';
+
+/* ══════ FETCH SUPABASE ══════ */
+async function fetchProducts(){
+  renderSkeletons();
+  try {
+    const baseUrl = SUPABASE_URL.endsWith('/') ? SUPABASE_URL.slice(0, -1) : SUPABASE_URL;
+    const url = `${baseUrl}/rest/v1/productos?select=*`;
+    
+    console.log('📡 Conectando a Supabase...', url);
+    
+    const res = await fetch(url, {
+      headers:{
+        "apikey": SUPABASE_KEY,
+        "Authorization": `Bearer ${SUPABASE_KEY}`,
+        "Content-Type": "application/json"
+      }
+    });
+    
+    if(!res.ok) {
+      throw new Error(`Error ${res.status} ${res.statusText}: No se pudieron cargar los productos de Supabase.`);
+    }
+    
+    products = await res.json();
+    console.log('✅ Productos cargados exitosamente:', products);
+    renderProducts(products);
+  } catch(e){
+    console.error('❌ Error al traer productos:', e.message);
+    document.getElementById('catalog-grid').innerHTML =
+      `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">
+        <i class="fas fa-exclamation-circle" style="font-size:32px;display:block;margin-bottom:12px;"></i>
+        <p><strong>Error al cargar productos:</strong><br/>${e.message}</p>
+       </div>`;
+  }
+}
+
+function renderSkeletons(){
+  document.getElementById('catalog-grid').innerHTML =
+    Array(6).fill(0).map(()=>
+      `<div style="border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.5);">
+        <div class="skel-img"></div>
+        <div class="skel-line"></div>
+        <div class="skel-line short"></div>
+       </div>`
+    ).join('');
+}
+
+function renderProducts(list){
+  const grid = document.getElementById('catalog-grid');
+  const filtered = currentFilter==='todos' ? list : list.filter(p=>p.categoria===currentFilter);
+  if(!filtered.length){
+    grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">
+      <i class="fas fa-box-open" style="font-size:32px;display:block;margin-bottom:12px;"></i>
+      <p>Sin productos en esta categoría todavía.</p></div>`;
+    return;
+  }
+  grid.innerHTML = filtered.map(p=>{
+    const inCart = cart[p.id]?.qty || 0;
+    const precioStr = p.precio>0
+      ? `$<em>${p.precio.toLocaleString('es-AR')}</em>`
+      : `<em>Consultar</em>`;
+    return `
+    <div class="product-card">
+      <div class="product-img">
+        ${p.imagen_url
+          ? `<img src="${p.imagen_url}" alt="${p.nombre}" loading="lazy"/>`
+          : `<div class="product-img-ph"><i class="fas fa-cube"></i><span>SIN FOTO</span></div>`}
+        <span class="cat-badge">${p.categoria}</span>
+      </div>
+      <div class="product-body">
+        <p class="product-name">${p.nombre}</p>
+        <p class="product-desc">${p.descripcion||''}</p>
+        <p class="product-price">${precioStr}</p>
+        <button class="btn-add${inCart>0?' added':''}"
+                onclick="addToCart(${p.id})" id="btn-${p.id}">
+          <i class="fas ${inCart>0?'fa-check':'fa-plus'}"></i>
+          ${inCart>0?`En carrito (${inCart})`:'Agregar al carrito'}
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterCat(cat,btn){
+  currentFilter=cat;
+  document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(products);
+}
+
+/* ══════ CART ══════ */
+function addToCart(id){
+  const product = products.find(p=>p.id===id);
+  if(!product) return;
+  cart[id] ? cart[id].qty++ : (cart[id]={product,qty:1});
+  updateCartUI();
+  updateProductBtn(id);
+  showToast(`"${product.nombre}" agregado al pedido`);
+  const badge=document.getElementById('cart-badge');
+  badge.style.transform='scale(1.4)';
+  setTimeout(()=>badge.style.transform='',200);
+}
+
+function changeQty(id,delta){
+  if(!cart[id]) return;
+  cart[id].qty+=delta;
+  if(cart[id].qty<=0) delete cart[id];
+  updateCartUI();
+  updateProductBtn(id);
+  renderCartItems();
+}
+
+function clearCart(){
+  cart={};
+  updateCartUI();
+  products.forEach(p=>updateProductBtn(p.id));
+  renderCartItems();
+}
+
+function updateProductBtn(id){
+  const btn=document.getElementById(`btn-${id}`);
+  if(!btn) return;
+  const inCart=cart[id]?.qty||0;
+  btn.className=`btn-add${inCart>0?' added':''}`;
+  btn.innerHTML=inCart>0
+    ? `<i class="fas fa-check"></i> En carrito (${inCart})`
+    : `<i class="fas fa-plus"></i> Agregar al carrito`;
+}
+
+function updateCartUI(){
+  const total=Object.values(cart).reduce((s,i)=>s+i.qty,0);
+  const badge=document.getElementById('cart-badge');
+  badge.textContent=total;
+  badge.style.opacity=total>0?'1':'0';
+  badge.style.transform=total>0?'scale(1)':'scale(0)';
+  const label=document.getElementById('cart-count-label');
+  if(label) label.textContent=`${total} item${total!==1?'s':''}`;
+  const subtotal=Object.values(cart).reduce((s,i)=>s+(i.product.precio||0)*i.qty,0);
+  const totalEl=document.getElementById('cart-total');
+  if(totalEl) totalEl.textContent=subtotal.toLocaleString('es-AR');
+  const footer=document.getElementById('cart-footer');
+  if(footer) footer.style.display=total>0?'flex':'none';
+}
+
+function renderCartItems(){
+  const container=document.getElementById('cart-items');
+  const items=Object.values(cart);
+  if(!items.length){
+    container.innerHTML=`<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px;text-align:center;">
+      <i class="fas fa-shopping-bag" style="font-size:42px;color:#ccc;"></i>
+      <p style="font-size:14px;color:var(--muted);">Tu carrito está vacío.<br/>Agregá productos del catálogo.</p>
+    </div>`;
+    return;
+  }
+  container.innerHTML=items.map(({product:p,qty})=>`
+    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:12px;">
+      <div style="width:56px;height:56px;border-radius:12px;background:#e8e8e8;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+        ${p.imagen_url
+          ? `<img src="${p.imagen_url}" alt="${p.nombre}" style="width:100%;height:100%;object-fit:cover;"/>`
+          : `<i class="fas fa-cube" style="font-size:20px;color:#ccc;"></i>`}
+      </div>
+      <div style="flex:1;min-width:0;">
+        <p style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.nombre}</p>
+        <p style="font-family:'Roboto Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;">${p.precio>0?`$${p.precio.toLocaleString('es-AR')} c/u`:'Precio a consultar'}</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <button onclick="changeQty(${p.id},-1)" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.07);border:none;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">
+          ${qty<=1?'<i class="fas fa-trash-alt" style="font-size:10px"></i>':'−'}
+        </button>
+        <span style="font-family:'Roboto Mono',monospace;font-size:13px;min-width:20px;text-align:center;">${qty}</span>
+        <button onclick="changeQty(${p.id},1)" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.07);border:none;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;">+</button>
+      </div>
+    </div>`).join('');
+}
+
+/* ══════ PANEL OPEN/CLOSE ══════ */
+function openCart(){
+  renderCartItems();
+  document.getElementById('cart-panel').style.transform='translateX(0)';
+  const overlay=document.getElementById('cart-overlay');
+  overlay.style.opacity='1';
+  overlay.style.pointerEvents='auto';
+  document.body.style.overflow='hidden';
+}
+function closeCart(){
+  document.getElementById('cart-panel').style.transform='translateX(100%)';
+  const overlay=document.getElementById('cart-overlay');
+  overlay.style.opacity='0';
+  overlay.style.pointerEvents='none';
+  document.body.style.overflow='';
+}
+
+/* ══════ WHATSAPP ══════ */
+function sendToWhatsApp(){
+  const items=Object.values(cart);
+  if(!items.length) return;
+  const lines=items.map(({product:p,qty})=>
+    `  • ${qty}x ${p.nombre}${p.precio>0?` ($${(p.precio*qty).toLocaleString('es-AR')})`:' (consultar precio)'}`
+  ).join('\n');
+  const subtotal=items.reduce((s,i)=>s+(i.product.precio||0)*i.qty,0);
+  const sub=subtotal>0?`\n\n💰 Subtotal: $${subtotal.toLocaleString('es-AR')}`:'';
+  const msg=`Hola Don Gato Labs! 👋\n\nMe gustaría hacer el siguiente pedido:\n\n${lines}${sub}\n\n¿Podés confirmarme disponibilidad y forma de pago? ¡Gracias!`;
+  window.open(`https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+/* ══════ TOAST ══════ */
+let toastTimer;
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.opacity='1';
+  t.style.transform='translateX(-50%) translateY(0)';
+  clearTimeout(toastTimer);
+  toastTimer=setTimeout(()=>{
+    t.style.opacity='0';
+    t.style.transform='translateX(-50%) translateY(20px)';
+  },2200);
+}
+
+/* ══════ INIT ══════ */
+fetchProducts();
 </script>
 </body>
 </html>
