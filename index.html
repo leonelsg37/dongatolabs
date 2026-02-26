@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Don Gato Labs — Diseño e Impresión 3D</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Montserrat:wght@700;800&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
 <link href="./output.css" rel="stylesheet">
 <style>
@@ -91,7 +91,6 @@ body{
   overflow:hidden;border-radius:10px;
   display:flex;align-items:center;justify-content:center;
   background:rgba(255,255,255,.35);
-  border:1px dashed rgba(0,0,0,.13);
 }
 @media(min-width:500px){.logo-wrap{width:112px;height:63px;}}
 @media(min-width:768px){.logo-wrap{width:142px;height:80px;}}
@@ -215,12 +214,14 @@ body{
   opacity:0;animation:fadeUp .6s .2s forwards;
 }
 h1.hero-title{
+  font-family:'Montserrat',sans-serif;
   font-size:clamp(50px,14vw,116px);
   font-weight:800;line-height:1;
   letter-spacing:-.03em;margin-bottom:14px;
+  text-transform:uppercase;color:#0A0A0A;
   opacity:0;animation:fadeUp .6s .35s forwards;
 }
-h1.hero-title span{color:var(--accent);}
+h1.hero-title span{color:#FF6B00;}
 .hero-sub{
   font-family:'Roboto Mono',monospace;
   font-size:11px;color:var(--muted);
@@ -641,7 +642,7 @@ footer strong{color:var(--accent);}
   <div class="hero-dots"></div>
   <p class="hero-eyebrow">Diseño &amp; Impresión 3D · Posadas, Misiones</p>
   <h1 class="hero-title">Don Gato<br/><span>Labs</span></h1>
-  <p class="hero-sub">Where your ideas take dimension.</p>
+  <p class="hero-sub">Donde tus ideas pasan a la tercera dimensión.</p> 
   <div class="bento" id="hero-bento"></div>
 </section>
 
@@ -874,15 +875,15 @@ footer strong{color:var(--accent);}
      → Categorías: "lampara" | "souvenir" | "carteleria" | "decoracion" | "pedido"
 ══════════════════════════════════════════════════════════ */
 const productos = [
-  { url: "", titulo: "Lámpara Geo Series 01",       categoria: "lampara"     },
-  { url: "", titulo: "Llavero Corporativo Logo",     categoria: "souvenir"    },
-  { url: "", titulo: "Cartel Técnico Letras 3D",     categoria: "carteleria"  },
-  { url: "", titulo: "Pieza de Repuesto Custom",     categoria: "pedido"      },
-  { url: "", titulo: "Pantalla Hexagonal Ambient",   categoria: "lampara"     },
-  { url: "", titulo: "Escultura Decorativa Minima",  categoria: "decoracion"  },
-  { url: "", titulo: "Set Souvenirs Evento",         categoria: "souvenir"    },
-  { url: "", titulo: "Cartel Mapa Ciudad",           categoria: "carteleria"  },
-  { url: "", titulo: "Prototipo Industrial Custom",  categoria: "pedido"      },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/Imagen%20de%20WhatsApp%202024-08-15%20a%20las%2020.29.39_5ebc1c9d.jpg", titulo: "Lámpara 37",       categoria: "lampara"     },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/20250629_211324.jpg", titulo: "Llavero Astronauta",     categoria: "souvenir"    },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/photo_2025-06-06_18-01-44.jpg", titulo: "Lámpara Violet",     categoria: "lamparas"  },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/cartel.jpg", titulo: "Lámpara Retroiluminada",     categoria: "cartelería"      },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/20250606_163517.jpg", titulo: "Pantalla Hexagonal Ambient",   categoria: "lampara"     },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/ChatGPT%20Image%2025%20abr%202025,%2009_29_21%20p.m..png", titulo: "Prototipo Lampara",  categoria: "render"  },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/photo_2025-06-17_14-17-57%20-%20copia.jpg", titulo: "Set Souvenirs Evento",         categoria: "souvenir"    },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/IMG_20220530_113348.jpg", titulo: "Llaveros 3D",           categoria: "llaveros"  },
+  { url: "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/Imagen%20de%20WhatsApp%202025-05-28%20a%20las%2020.55.38_1eae66d3.jpg", titulo: "Lapicero F1",  categoria: "pedido"      },
 ];
 
 /* ══════════════════════════════════════════════════════════
@@ -890,7 +891,7 @@ const productos = [
      → Pegá la URL de tu logo acá (proporción 16:9 recomendada)
      → Si la dejás vacía se muestra el placeholder
 ══════════════════════════════════════════════════════════ */
-const LOGO_URL = "";
+const LOGO_URL = "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGOS%20DG%20LABS%20FINALES.png";
 
 /* ══════════════════════════════════════════════════════════
    RENDER BENTO HERO
