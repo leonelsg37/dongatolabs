@@ -368,6 +368,11 @@ h2.section-title{
   box-shadow:0 0 36px var(--accent-glow),0 10px 36px rgba(0,0,0,.05);
   transform:translateY(-5px);
 }
+/* show overlay when hovering the card */
+.cat-card-overlay{pointer-events:none;}
+.product-card:hover .cat-card-overlay{opacity:1;}
+.cat-card-overlay span{transition:transform .3s;}
+.product-card:hover .cat-card-overlay span{transform:scale(1.05);}
 .product-img{
   width:100%;overflow:hidden;
   background:#f5f5f5;
@@ -665,6 +670,21 @@ footer strong{color:var(--accent);}
 }
 .btn-add:hover{opacity:.88;transform:translateY(-1px);}
 .btn-add.added{background:#22c55e;box-shadow:0 4px 16px rgba(34,197,94,.3);}
+
+/* glassy quick-view trigger button */
+.btn-vermas{
+  width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+  padding:12px;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;
+  color:var(--accent);
+  background:rgba(255,255,255,.15);
+  backdrop-filter:blur(12px) saturate(180%);
+  -webkit-backdrop-filter:blur(12px) saturate(180%);
+  border:1px solid rgba(255,255,255,.4);
+  border-radius:12px;
+  cursor:pointer;transition:opacity .2s,transform .2s;
+  box-shadow:0 4px 16px var(--accent-glow);
+}
+.btn-vermas:hover{opacity:.9;transform:translateY(-1px);}
 .skel-img{width:100%;aspect-ratio:4/3;background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
 .skel-line{height:12px;border-radius:6px;margin:12px 18px 0;background:linear-gradient(90deg,#e8e8e8 25%,#f0f0f0 50%,#e8e8e8 75%);background-size:200% 100%;animation:shimmer 1.4s infinite;}
 .skel-line.short{width:50%;margin-bottom:16px;}
@@ -862,6 +882,32 @@ footer strong{color:var(--accent);}
 }
 .qv-btn-close-text:hover{color:rgba(255,255,255,0.75);border-color:rgba(255,255,255,0.22);}
 
+/* carousel navigation */
+.qv-nav{
+  position:absolute;top:50%;transform:translateY(-50%);
+  width:40px;height:40px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.2);
+  border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:20px;cursor:pointer;
+  opacity:.7;transition:opacity .18s,background .18s;
+  z-index:5;
+}
+.qv-nav:hover{opacity:1;background:rgba(255,255,255,0.18);}
+.qv-nav-left{left:14px;}
+.qv-nav-right{right:14px;}
+.qv-dots{
+  position:absolute;bottom:12px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;z-index:5;
+}
+.qv-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:rgba(255,255,255,0.4);
+  transition:background .18s;
+}
+.qv-dot.active{background:#fff;}
+
 </style>
 </head>
 <body>
@@ -1000,6 +1046,11 @@ footer strong{color:var(--accent);}
           <span>Sin imagen</span>
         </div>
         <img id="qv-img" src="" alt="" style="display:none;position:absolute;inset:0;width:100%;height:100%;object-fit:cover;"/>
+        <!-- flechas de carrusel -->
+        <button id="qv-prev" class="qv-nav qv-nav-left" onclick="qvNavigate('prev')" aria-label="Foto anterior">‹</button>
+        <button id="qv-next" class="qv-nav qv-nav-right" onclick="qvNavigate('next')" aria-label="Foto siguiente">›</button>
+        <!-- puntos indicador -->
+        <div id="qv-dots" class="qv-dots"></div>
         <div class="qv-img-gradient"></div>
         <span class="qv-badge-cat" id="qv-badge-cat"></span>
         <span class="qv-badge-etiqueta" id="qv-badge-etiqueta" style="display:none;"></span>
@@ -1399,7 +1450,22 @@ function slug(s){return s.toUpperCase().replace(/\s+/g,'_').replace(/[^A-Z0-9_]/
 function renderProducts(){
   document.getElementById('products-grid').innerHTML =
     productos.map((p,i) =>
-      `<div class="product-card${i===0?' large':''}">
+      `<div class="product-card${i===0?' large':''} group relative" onclick="openQuickView(${p.id||0})">
+        <div class="cat-card-overlay" style="
+          position:absolute;inset:0;z-index:2;
+          display:flex;align-items:flex-end;justify-content:center;
+          padding-bottom:18px;
+          background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 55%);
+          opacity:0;transition:opacity .28s;
+        ">
+          <span style="
+            padding:6px 18px;border-radius:100px;
+            color:#fff;font-family:'Roboto Mono',monospace;
+            font-size:9px;letter-spacing:.18em;text-transform:uppercase;font-weight:600;
+            background:rgba(255,107,0,0.92);
+            backdrop-filter:blur(8px);
+          ">VER MÁS</span>
+        </div>
         <div class="product-img">
           ${p.url
             ? `<img src="${p.url}" alt="${p.titulo}" loading="lazy"/>`
@@ -1409,6 +1475,7 @@ function renderProducts(){
         <div class="product-info">
           <p class="prod-mono"><span>PROJECT_3D:</span> ${slug(p.titulo)}</p>
           <p class="prod-status"><span class="led"></span>STATUS: COMPLETED — ${p.titulo}</p>
+          <button class="btn-vermas" onclick="event.stopPropagation(); openQuickView(${p.id||0})">Ver más</button>
         </div>
       </div>`
     ).join('');
@@ -1517,6 +1584,11 @@ let currentMain   = 'mobiliario';   // 'mobiliario' or '3d'
 let currentSub    = 'Todos';        // palabra clave del subfiltro
 let currentFilter = 'todos'; // legacy
 
+// quick-view carousel state
+let qvImgs    = [];
+let qvIdx     = 0;
+let qvProduct = null;
+
 /* ══════ FETCH SUPABASE ══════ */
 async function fetchProducts(){
   renderSkeletons();
@@ -1619,6 +1691,10 @@ function renderProducts(list){
         <p class="product-name">${p.titulo}</p>
         <p class="product-desc">${p.etiqueta||''}</p>
         <p class="product-price">${precioStr}</p>
+        <!-- visible button for quick view -->
+        <button class="btn-vermas" onclick="event.stopPropagation(); openQuickView(${p.id})">
+          Ver más
+        </button>
         <button class="btn-add${inCart>0?' added':''}"
                 onclick="event.stopPropagation(); addToCart(${p.id})" id="btn-${p.id}">
           <i class="fas ${inCart>0?'fa-check':'fa-plus'}"></i>
@@ -1636,12 +1712,26 @@ function openQuickView(id){
     console.log('Producto clickeado:', producto);
     if(!producto) throw new Error('Producto no encontrado');
 
+    qvProduct = producto;
+    qvImgs = Array.isArray(producto.imagenes_extra) && producto.imagenes_extra.length
+      ? [...producto.imagenes_extra]
+      : producto.imagen_url
+        ? [producto.imagen_url]
+        : [];
+    qvIdx = 0;
+
+    document.getElementById('qv-prev').style.display = qvImgs.length>1 ? 'flex' : 'none';
+    document.getElementById('qv-next').style.display = qvImgs.length>1 ? 'flex' : 'none';
+
     const placeholder = 'https://via.placeholder.com/400x300?text=Sin+imagen';
+
+    // show first image immediately
+    showCurrentImage();
 
     const imgEl    = document.getElementById('qv-img');
     const noImgEl  = document.getElementById('qv-no-img');
-    if(producto.imagen_url){
-      imgEl.src = producto.imagen_url;
+    if(qvImgs.length){
+      imgEl.src = qvImgs[qvIdx];
       imgEl.alt = producto.titulo || '';
       imgEl.style.display='block';
       noImgEl.style.display='none';
@@ -1690,11 +1780,13 @@ function openQuickView(id){
     );
     document.getElementById('qv-btn-wa').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
 
+    // render dots and current image
+    updateDots();
+
     document.body.style.overflow='hidden';
     document.getElementById('qv-overlay').classList.add('open');
   } catch(err){
     console.error('Error en openQuickView', err);
-    // still try to open overlay with whatever we have
     document.getElementById('qv-overlay').classList.add('open');
   }
 }
@@ -1715,6 +1807,41 @@ if(_qvOverlay){
 document.addEventListener('keydown', e=>{
   if(e.key==='Escape') closeQuickView();
 });
+
+// carousel helpers
+function showCurrentImage(){
+  const imgEl   = document.getElementById('qv-img');
+  const noImgEl = document.getElementById('qv-no-img');
+  if(qvImgs.length){
+    imgEl.src = qvImgs[qvIdx];
+    imgEl.alt = qvProduct?.titulo || '';
+    imgEl.style.display = 'block';
+    noImgEl.style.display = 'none';
+  } else {
+    imgEl.style.display = 'none';
+    noImgEl.style.display = 'flex';
+  }
+  updateDots();
+}
+
+function updateDots(){
+  const container = document.getElementById('qv-dots');
+  if(!container) return;
+  container.innerHTML = qvImgs
+    .map((_,i)=>`<div class="qv-dot${i===qvIdx?' active':''}" data-idx="${i}"></div>`)
+    .join('');
+  container.querySelectorAll('.qv-dot').forEach(el=>{
+    el.onclick = ()=>{ qvIdx = +el.dataset.idx; showCurrentImage(); };
+  });
+}
+
+function qvNavigate(dir){
+  if(qvImgs.length <= 1) return;
+  qvIdx = (dir === 'next')
+    ? (qvIdx + 1) % qvImgs.length
+    : (qvIdx - 1 + qvImgs.length) % qvImgs.length;
+  showCurrentImage();
+}
 
 // existing filterCat kept for backwards compatibility (no longer used)
 function filterCat(cat,btn){
