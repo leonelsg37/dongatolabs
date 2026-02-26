@@ -22,6 +22,30 @@
       --text: #0A0A0A;
       --muted: #888;
       --r: 24px;
+      --glass-light: rgba(255, 255, 255, .22);
+      --glass-solid: rgba(255, 255, 255, .75);
+      --glass-menu: rgba(255, 255, 255, .94);
+      --border-glass: rgba(255, 255, 255, .55);
+      --btn-bg: rgba(0, 0, 0, .07);
+    }
+
+    body.dark-mode {
+      --bg: #0d0d0d;
+      --surface: #141414;
+      --border: #262626;
+      --text: #f5f5f5;
+      --muted: #a3a3a3;
+      --accent-soft: rgba(255, 107, 0, .15);
+      --accent-glow: rgba(255, 107, 0, .40);
+      --glass-light: rgba(10, 10, 10, .45);
+      --glass-solid: rgba(20, 20, 20, .85);
+      --glass-menu: rgba(20, 20, 20, .94);
+      --border-glass: rgba(255, 255, 255, .15);
+      --btn-bg: rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode #cart-panel {
+      background: rgba(15, 15, 15, 0.95) !important;
     }
 
     *,
@@ -42,6 +66,7 @@
       color: var(--text);
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
+      transition: background 0.3s ease, color 0.3s ease;
     }
 
     /* ── Cursor (desktop only) ─────────────── */
@@ -123,10 +148,10 @@
       align-items: center;
       justify-content: space-between;
       padding: 0 18px;
-      background: rgba(255, 255, 255, .22);
+      background: var(--glass-light);
       backdrop-filter: blur(20px) saturate(180%);
       -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, .55);
+      border: 1px solid var(--border-glass);
       border-radius: 28px;
       box-shadow:
         0 8px 32px rgba(0, 0, 0, .07),
@@ -178,7 +203,7 @@
     .logo-ph {
       font-family: 'Roboto Mono', monospace;
       font-size: 7px;
-      color: rgba(0, 0, 0, .32);
+      color: var(--muted);
       text-align: center;
       line-height: 1.5;
     }
@@ -202,13 +227,15 @@
       font-weight: 700;
       letter-spacing: .08em;
       text-transform: uppercase;
-      color: rgba(0, 0, 0, .68);
+      color: var(--text);
+      opacity: 0.8;
       text-decoration: none;
-      transition: color .2s;
+      transition: color .2s, opacity .2s;
     }
 
     .nav-links a:hover {
       color: var(--accent);
+      opacity: 1;
     }
 
     /* Desktop CTA */
@@ -290,10 +317,10 @@
       left: 16px;
       right: 16px;
       z-index: 999;
-      background: rgba(255, 255, 255, .94);
+      background: var(--glass-menu);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
-      border: 1px solid rgba(255, 255, 255, .6);
+      border: 1px solid var(--border-glass);
       border-radius: 24px;
       padding: 20px;
       box-shadow: 0 16px 48px rgba(0, 0, 0, .1);
@@ -370,12 +397,7 @@
     }
 
     .hero-dots {
-      position: absolute;
-      inset: 0;
-      background-image: radial-gradient(circle, #ddd 1px, transparent 1px);
-      background-size: 32px 32px;
-      opacity: .4;
-      pointer-events: none;
+      display: none;
     }
 
     .hero-eyebrow {
@@ -397,7 +419,7 @@
       letter-spacing: -.03em;
       margin-bottom: 14px;
       text-transform: uppercase;
-      color: #0A0A0A;
+      color: var(--text);
       opacity: 0;
       animation: fadeUp .6s .35s forwards;
     }
@@ -580,7 +602,7 @@
     .quienes-text p {
       font-size: 16px;
       line-height: 1.82;
-      color: #333;
+      color: var(--text);
     }
 
     .quienes-text p strong {
@@ -898,7 +920,7 @@
     .svc-desc {
       font-size: 14px;
       line-height: 1.78;
-      color: #555;
+      color: var(--muted);
     }
 
     /* ══════════════════════════════════════════
@@ -1782,6 +1804,12 @@
 </head>
 
 <body>
+  <!-- Dark Mode Init Script (Before rendering to prevent FOUC) -->
+  <script>
+    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.body.classList.add('dark-mode');
+    }
+  </script>
 
   <div id="progress-bar"></div>
   <div id="cursor"></div>
@@ -1806,6 +1834,23 @@
       <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none" />
     </svg>
   </a>
+
+  <!-- Dark Mode Toggle Float -->
+  <button id="dark-mode-toggle" aria-label="Activar modo oscuro" style="
+     position:fixed; bottom:20px; left:20px;
+     width:54px; height:54px; border-radius:50%;
+     background: rgba(10,10,10,0.45);
+     backdrop-filter: blur(16px) saturate(160%);
+     -webkit-backdrop-filter: blur(16px) saturate(160%);
+     border: 1px solid rgba(255,255,255,0.15);
+     display:flex; align-items:center; justify-content:center;
+     color: #fff; font-size:22px;
+     box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1);
+     z-index:998; cursor: pointer;
+     transition: transform .3s, background .3s;
+  " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+    <i class="fas fa-moon" id="dark-mode-icon"></i>
+  </button>
   <!-- ── TOAST ── -->
   <div id="toast" style="
   position:fixed;bottom:90px;left:50%;
@@ -1850,10 +1895,10 @@
   <div id="cart-panel" style="
   position:fixed;top:0;right:0;bottom:0;
   width:min(420px,100vw);
-  background:rgba(255,255,255,.75);
+  background:var(--glass-solid);
   backdrop-filter:blur(28px) saturate(180%);
   -webkit-backdrop-filter:blur(28px) saturate(180%);
-  border-left:1px solid rgba(255,255,255,.6);
+  border-left:1px solid var(--border-glass);
   box-shadow:-16px 0 48px rgba(0,0,0,.12),inset 1px 0 0 rgba(255,255,255,.8);
   z-index:1001;display:flex;flex-direction:column;
   transform:translateX(100%);
@@ -1868,7 +1913,7 @@
           items</span>
       </div>
       <button onclick="closeCart()"
-        style="background:rgba(0,0,0,.07);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;">
+        style="background:var(--btn-bg);border:none;width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;">
         <i class="fas fa-times"></i>
       </button>
     </div>
@@ -2589,6 +2634,32 @@
     renderBento();
     renderProducts();
     initLogo();
+
+    /* ══════════════════════════════════════════════════════════
+       DARK MODE TOGGLE
+    ══════════════════════════════════════════════════════════ */
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const darkModeIcon = document.getElementById('dark-mode-icon');
+
+    function updateDarkModeIcon() {
+      if (document.body.classList.contains('dark-mode')) {
+        darkModeIcon.classList.remove('fa-moon');
+        darkModeIcon.classList.add('fa-sun');
+      } else {
+        darkModeIcon.classList.remove('fa-sun');
+        darkModeIcon.classList.add('fa-moon');
+      }
+    }
+
+    // Init icon
+    updateDarkModeIcon();
+
+    darkModeToggle.addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const isDark = document.body.classList.contains('dark-mode');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      updateDarkModeIcon();
+    });
   </script>
 
   <script>
@@ -2795,8 +2866,9 @@
         <span class="qv-spec-val">${s.value}</span>
       </div>`).join('');
 
+        const msgPrecio = producto.precio > 0 ? ` a $${Number(producto.precio).toLocaleString('es-AR')}` : '';
         const msg = encodeURIComponent(
-          `Hola Don Gato Labs! 👋 Me interesa el *${producto.titulo}*. ¿Podés darme más info y presupuesto?`
+          `Hola Don Gato Labs! 👋 Me interesa el *${producto.titulo}*${msgPrecio}. ¿Podés darme más info y presupuesto?`
         );
         document.getElementById('qv-btn-wa').href = `https://wa.me/${WA_NUMBER}?text=${msg}`;
 
@@ -2913,7 +2985,7 @@
       cart[id] ? cart[id].qty++ : (cart[id] = { product, qty: 1 });
       updateCartUI();
       updateProductBtn(id);
-      showToast(`"${product.nombre}" agregado al pedido`);
+      showToast(`"${product.titulo}" agregado al pedido`);
       const badge = document.getElementById('cart-badge');
       badge.style.transform = 'scale(1.4)';
       setTimeout(() => badge.style.transform = '', 200);
@@ -2965,28 +3037,28 @@
       const items = Object.values(cart);
       if (!items.length) {
         container.innerHTML = `<div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px;text-align:center;">
-      <i class="fas fa-shopping-bag" style="font-size:42px;color:#ccc;"></i>
+      <i class="fas fa-shopping-bag" style="font-size:42px;color:var(--text);opacity:0.3;"></i>
       <p style="font-size:14px;color:var(--muted);">Tu carrito está vacío.<br/>Agregá productos del catálogo.</p>
     </div>`;
         return;
       }
       container.innerHTML = items.map(({ product: p, qty }) => `
-    <div style="display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.6);border:1px solid rgba(255,255,255,.7);border-radius:16px;padding:12px;">
-      <div style="width:56px;height:56px;border-radius:12px;background:#e8e8e8;flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
+    <div style="display:flex;align-items:center;gap:12px;background:var(--glass-light);border:1px solid var(--border-glass);border-radius:16px;padding:12px;">
+      <div style="width:56px;height:56px;border-radius:12px;background:var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;overflow:hidden;">
         ${p.imagen_url
-          ? `<img src="${p.imagen_url}" alt="${p.nombre}" style="width:100%;height:100%;object-fit:cover;"/>`
+          ? `<img src="${p.imagen_url}" alt="${p.titulo}" style="width:100%;height:100%;object-fit:cover;"/>`
           : `<i class="fas fa-cube" style="font-size:20px;color:#ccc;"></i>`}
       </div>
       <div style="flex:1;min-width:0;">
-        <p style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.nombre}</p>
+        <p style="font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${p.titulo}</p>
         <p style="font-family:'Roboto Mono',monospace;font-size:11px;color:var(--muted);margin-top:2px;">${p.precio > 0 ? `$${p.precio.toLocaleString('es-AR')} c/u` : 'Precio a consultar'}</p>
       </div>
       <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
-        <button onclick="changeQty(${p.id},-1)" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.07);border:none;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">
+        <button onclick="changeQty(${p.id},-1)" style="width:28px;height:28px;border-radius:8px;background:var(--btn-bg);border:none;cursor:pointer;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;">
           ${qty <= 1 ? '<i class="fas fa-trash-alt" style="font-size:10px"></i>' : '−'}
         </button>
         <span style="font-family:'Roboto Mono',monospace;font-size:13px;min-width:20px;text-align:center;">${qty}</span>
-        <button onclick="changeQty(${p.id},1)" style="width:28px;height:28px;border-radius:8px;background:rgba(0,0,0,.07);border:none;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;">+</button>
+        <button onclick="changeQty(${p.id},1)" style="width:28px;height:28px;border-radius:8px;background:var(--btn-bg);border:none;cursor:pointer;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;">+</button>
       </div>
     </div>`).join('');
     }
@@ -3013,7 +3085,7 @@
       const items = Object.values(cart);
       if (!items.length) return;
       const lines = items.map(({ product: p, qty }) =>
-        `  • ${qty}x ${p.nombre}${p.precio > 0 ? ` ($${(p.precio * qty).toLocaleString('es-AR')})` : ' (consultar precio)'}`
+        `  • ${qty}x ${p.titulo}${p.precio > 0 ? ` ($${(p.precio * qty).toLocaleString('es-AR')})` : ' (consultar precio)'}`
       ).join('\n');
       const subtotal = items.reduce((s, i) => s + (i.product.precio || 0) * i.qty, 0);
       const sub = subtotal > 0 ? `\n\n💰 Subtotal: $${subtotal.toLocaleString('es-AR')}` : '';
