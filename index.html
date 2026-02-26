@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="es">
 
 <head>
@@ -791,6 +791,7 @@
 
     .product-img {
       width: 100%;
+      aspect-ratio: 1 / 1;
       overflow: hidden;
       background: var(--border);
       display: flex;
@@ -800,7 +801,8 @@
 
     .product-img img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
       transition: transform .4s;
     }
 
@@ -830,7 +832,8 @@
       position: absolute;
       top: 12px;
       right: 12px;
-      background: rgba(255, 255, 255, .9);
+      background: var(--surface);
+      color: var(--text);
       border: 1px solid var(--border);
       border-radius: 100px;
       padding: 3px 10px;
@@ -1924,9 +1927,9 @@
   border:1px solid rgba(255,107,0,0.35);
   color:var(--accent);cursor:pointer;
   display:flex;align-items:center;justify-content:center;font-size:22px;
-  box-shadow:0 8px 32px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.1);
-  z-index:900; transition:transform .3s;
-" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+  box-shadow:0 8px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index:900; transition:all .3s ease;
+" onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 8px 24px rgba(255,107,0,0.4), inset 0 1px 0 rgba(255,255,255,0.2)'" onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.1)'">
     <i class="fas fa-shopping-bag"></i>
     <span id="cart-badge" style="
     position:absolute;top:-4px;right:-4px;
