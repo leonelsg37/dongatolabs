@@ -565,6 +565,35 @@ footer strong{color:var(--accent);}
   border-color:var(--accent);
   box-shadow:0 4px 16px var(--accent-glow);
 }
+.pill-main{
+  min-width:280px; /* min-w-[280px] */
+  padding:0 3rem 0 3rem; /* px-12 py-6 will be overridden by shorthand below */
+  padding:1.5rem 3rem; /* py-6 px-12 */
+  font-family:'Chillax',sans-serif;
+  font-size:1.125rem; /* text-lg */
+  font-weight:700; /* bold */
+  letter-spacing:0.2em; /* tracking-[0.2em] */
+  text-transform:uppercase;
+  text-align:center;
+  white-space:nowrap;
+  color:#fff; /* text-white */
+  background:#ff6b00; /* bg-orange-600 */
+  border:2px solid rgba(255,107,0,0.3); /* border-2 border-orange-400/30 */
+  border-radius:1rem; /* rounded-2xl approx */
+  transition:all .3s;
+}
+.pill-main:hover{
+  transform:scale(1.05);
+}
+.pill-main.active{
+  background:#e65a00; /* bg-orange-700-ish */
+  box-shadow:0 0 20px rgba(255,107,0,0.4); /* orange glow */
+}
+.pill-main:not(.active){
+  background:transparent;
+  color:#ff6b00;
+  border:2px solid #ff6b00;
+}
 .product-card{
   border-radius:var(--r);overflow:hidden;
   background:rgba(255,255,255,.55);
@@ -892,12 +921,12 @@ footer strong{color:var(--accent);}
         Todos fabricados a pedido · Envíos a todo el país
       </p>
     </div>
-    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px;" id="filters">
-      <button class="pill active" onclick="filterCat('todos',this)">Todos</button>
-      <button class="pill" onclick="filterCat('Lámpara 3D',this)">Lámpara 3D</button>
-      <button class="pill" onclick="filterCat('Souvenir',this)">Souvenir</button>
-      <button class="pill" onclick="filterCat('Cartelería',this)">Cartelería</button>
-      <button class="pill" onclick="filterCat('Pedido Custom',this)">Custom</button>
+    <div id="main-filters" style="display:flex;gap:32px;justify-content:center;margin-bottom:20px;">
+      <button class="pill-main active" onclick="filterMain('mobiliario',this)">MOBILIARIO</button>
+      <button class="pill-main" onclick="filterMain('3d',this)">IMPRESIONES 3D</button>
+    </div>
+    <div id="subfilters" style="display:flex;justify-content:center;flex-wrap:wrap;gap:16px;width:100%;margin:32px 0;opacity:1;transition:opacity .4s;">
+      <!-- subfilters generated dynamically -->
     </div>
     <div id="catalog-grid" style="
       display:grid;
@@ -1192,7 +1221,9 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 /* ══════ STATE ══════ */
 let products      = [];
 let cart          = {};
-let currentFilter = 'todos';
+let currentMain   = 'mobiliario';   // 'mobiliario' or '3d'
+let currentSub    = 'Todos';        // palabra clave del subfiltro
+let currentFilter = 'todos'; // legacy
 
 /* ══════ FETCH SUPABASE ══════ */
 async function fetchProducts(){
@@ -1241,7 +1272,23 @@ function renderSkeletons(){
 
 function renderProducts(list){
   const grid = document.getElementById('catalog-grid');
-  const filtered = currentFilter==='todos' ? list : list.filter(p=>p.categoria===currentFilter);
+  // aplicar filtro principal (nivel 1)
+  let filtered = list.filter(p=>{
+    if(currentMain==='mobiliario'){
+      return p.categoria==='Muebles';
+    } else if(currentMain==='3d'){
+      return p.categoria==='3D Puro' || p.categoria==='Híbrido';
+    }
+    return true;
+  });
+  // aplicar subfiltro (nivel 2) sobre los resultados del nivel 1
+  if(currentSub && currentSub !== 'Todos'){
+    const term = currentSub.toLowerCase();
+    filtered = filtered.filter(p=>
+      (p.titulo||'').toLowerCase().includes(term) ||
+      (p.etiqueta||'').toLowerCase().includes(term)
+    );
+  }
   if(!filtered.length){
     grid.innerHTML=`<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--muted);">
       <i class="fas fa-box-open" style="font-size:32px;display:block;margin-bottom:12px;"></i>
@@ -1257,13 +1304,13 @@ function renderProducts(list){
     <div class="product-card">
       <div class="product-img">
         ${p.imagen_url
-          ? `<img src="${p.imagen_url}" alt="${p.nombre}" loading="lazy"/>`
+          ? `<img src="${p.imagen_url}" alt="${p.titulo}" loading="lazy"/>`
           : `<div class="product-img-ph"><i class="fas fa-cube"></i><span>SIN FOTO</span></div>`}
         <span class="cat-badge">${p.categoria}</span>
       </div>
       <div class="product-body">
-        <p class="product-name">${p.nombre}</p>
-        <p class="product-desc">${p.descripcion||''}</p>
+        <p class="product-name">${p.titulo}</p>
+        <p class="product-desc">${p.etiqueta||''}</p>
         <p class="product-price">${precioStr}</p>
         <button class="btn-add${inCart>0?' added':''}"
                 onclick="addToCart(${p.id})" id="btn-${p.id}">
@@ -1275,9 +1322,45 @@ function renderProducts(list){
   }).join('');
 }
 
+// existing filterCat kept for backwards compatibility (no longer used)
 function filterCat(cat,btn){
   currentFilter=cat;
   document.querySelectorAll('.pill').forEach(p=>p.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(products);
+}
+
+// opciones de subfiltros según nivel principal
+const subOptions = {
+  mobiliario: ['Todos','Escritorios','Mesas de Luz','Racks'],
+  '3d': ['Todos','Llaveros','Lámparas','Repuestos']
+};
+
+function generateSubfilters(){
+  const container = document.getElementById('subfilters');
+  if(!container) return;
+  // fade-out then populate and fade-in for smooth transitions
+  container.style.opacity = 0;
+  setTimeout(()=>{
+    container.innerHTML = subOptions[currentMain].map(label=>
+      `<button class="pill${label===currentSub?' active':''}" onclick="filterSub('${label}',this)">${label}</button>`
+    ).join('');
+    container.style.opacity = 1;
+  }, 200);
+}
+
+function filterMain(main,btn){
+  currentMain = main;
+  document.querySelectorAll('#main-filters .pill-main').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  currentSub = 'Todos';
+  generateSubfilters();
+  renderProducts(products);
+}
+
+function filterSub(label,btn){
+  currentSub = label;
+  document.querySelectorAll('#subfilters .pill').forEach(p=>p.classList.remove('active'));
   btn.classList.add('active');
   renderProducts(products);
 }
@@ -1413,6 +1496,8 @@ function showToast(msg){
 
 /* ══════ INIT ══════ */
 fetchProducts();
+// inicializar subfiltros según título principal
+generateSubfilters();
 </script>
 </body>
 </html>
