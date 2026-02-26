@@ -382,9 +382,8 @@
    HERO
 ══════════════════════════════════════════ */
     #hero {
-      min-height: 100svh;
       padding-top: calc(64px + 48px);
-      padding-bottom: 60px;
+      padding-bottom: 0;
       padding-left: 20px;
       padding-right: 20px;
       display: flex;
@@ -438,92 +437,144 @@
       animation: fadeUp .6s .5s forwards;
     }
 
-    /* Bento */
-    .bento {
+    /* ── Hero Carousel ── */
+    .hero-carousel {
       width: 100%;
       max-width: 880px;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
+      position: relative;
       opacity: 0;
       animation: fadeUp .7s .7s forwards;
-      align-items: start;
     }
 
-    @media(min-width:600px) {
-      .bento {
-        grid-template-columns: repeat(5, 1fr);
-        align-items: start;
-      }
-
-      .bento-cell:nth-child(1) {
-        grid-column: span 2;
-        grid-row: span 2;
-      }
-
-      .bento-cell:nth-child(2) {
-        grid-column: span 2;
-      }
-
-      .bento-cell:nth-child(3) {
-        grid-column: span 1;
-      }
-
-      .bento-cell:nth-child(4) {
-        grid-column: span 1;
-      }
-
-      .bento-cell:nth-child(5) {
-        grid-column: span 2;
-      }
-
-      .bento-cell:nth-child(6) {
-        grid-column: span 2;
-      }
+    .hc-viewport {
+      overflow: hidden;
+      border-radius: 22px;
+      position: relative;
+      cursor: grab;
     }
 
-    .bento-cell {
+    .hc-viewport:active {
+      cursor: grabbing;
+    }
+
+    /* soft gradient fade on edges */
+    .hc-viewport::before,
+    .hc-viewport::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    .hc-viewport::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg), transparent);
+    }
+
+    .hc-viewport::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg), transparent);
+    }
+
+    .hc-track {
+      display: flex;
+      gap: 10px;
+      transition: transform .65s cubic-bezier(.4, 0, .2, 1);
+      will-change: transform;
+    }
+
+    .hc-slide {
+      flex: 0 0 calc((100% - 20px) / 3);
       border-radius: 18px;
       overflow: hidden;
-      background: var(--surface);
       border: 1.5px solid var(--border);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: transform .3s, box-shadow .3s;
-      height: fit-content;
+      background: var(--surface);
+      aspect-ratio: 3/4;
+      position: relative;
     }
 
-    .bento-cell:hover {
-      transform: translateY(-4px) scale(1.01);
-      box-shadow: 0 16px 44px var(--accent-glow);
+    @media(max-width: 600px) {
+      .hc-slide {
+        flex: 0 0 calc((100% - 10px) / 2);
+      }
     }
 
-    .bento-cell img {
+    .hc-slide img {
       width: 100%;
-      height: auto;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform .45s;
     }
 
-    .bento-ph {
+    .hc-slide:hover img {
+      transform: scale(1.04);
+    }
+
+    .hc-slide-ph {
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      gap: 6px;
-      width: 100%;
-      height: 100%;
-      min-height: 90px;
+      gap: 8px;
     }
 
-    .bento-ph i {
-      font-size: 22px;
-      color: #ccc;
+    .hc-slide-ph i {
+      font-size: 24px;
+      color: var(--muted);
     }
 
-    .bento-ph span {
+    .hc-slide-ph span {
       font-family: 'Roboto Mono', monospace;
-      font-size: 8px;
-      color: #ccc;
+      font-size: 9px;
+      color: var(--muted);
+    }
+
+    /* arrows */
+    .hc-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border-glass);
+      background: var(--glass-solid);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      color: var(--text);
+      font-size: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity .25s, transform .25s, background .2s;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, .15);
+    }
+
+    .hero-carousel:hover .hc-arrow {
+      opacity: 1;
+    }
+
+    .hc-arrow:hover {
+      background: var(--accent);
+      color: #fff;
+      border-color: var(--accent);
+    }
+
+    .hc-arrow.prev {
+      left: 10px;
+    }
+
+    .hc-arrow.next {
+      right: 10px;
     }
 
     /* ══════════════════════════════════════════
@@ -741,7 +792,7 @@
     .product-img {
       width: 100%;
       overflow: hidden;
-      background: #f5f5f5;
+      background: var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1232,11 +1283,11 @@
     .product-card {
       border-radius: var(--r);
       overflow: hidden;
-      background: rgba(255, 255, 255, .55);
+      background: var(--surface);
       backdrop-filter: blur(14px) saturate(160%);
       -webkit-backdrop-filter: blur(14px) saturate(160%);
-      border: 1px solid rgba(255, 255, 255, .65);
-      box-shadow: 0 4px 24px rgba(0, 0, 0, .07), inset 0 1px 0 rgba(255, 255, 255, .8);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, .07);
       transition: transform .3s, box-shadow .3s;
       display: flex;
       flex-direction: column;
@@ -1251,7 +1302,7 @@
       width: 100%;
       aspect-ratio: 4/3;
       overflow: hidden;
-      background: #e8e8e8;
+      background: var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -1371,7 +1422,7 @@
     .skel-img {
       width: 100%;
       aspect-ratio: 4/3;
-      background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
+      background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.4s infinite;
     }
@@ -1380,7 +1431,7 @@
       height: 12px;
       border-radius: 6px;
       margin: 12px 18px 0;
-      background: linear-gradient(90deg, #e8e8e8 25%, #f0f0f0 50%, #e8e8e8 75%);
+      background: linear-gradient(90deg, var(--border) 25%, var(--surface) 50%, var(--border) 75%);
       background-size: 200% 100%;
       animation: shimmer 1.4s infinite;
     }
@@ -1866,12 +1917,16 @@
   <!-- ── CART FLOAT ── -->
   <button id="cart-float" onclick="openCart()" aria-label="Ver carrito" style="
   position:fixed;bottom:156px;right:20px;
-  width:56px;height:56px;border-radius:50%;
-  background:var(--accent);color:#fff;border:none;cursor:pointer;
+  width:54px;height:54px;border-radius:50%;
+  background:var(--accent-soft);
+  backdrop-filter:blur(16px) saturate(160%);
+  -webkit-backdrop-filter:blur(16px) saturate(160%);
+  border:1px solid rgba(255,107,0,0.35);
+  color:var(--accent);cursor:pointer;
   display:flex;align-items:center;justify-content:center;font-size:22px;
-  box-shadow:0 8px 24px var(--accent-glow);z-index:900;
-  transition:transform .3s;
-">
+  box-shadow:0 8px 32px var(--accent-glow), inset 0 1px 0 rgba(255,255,255,0.1);
+  z-index:900; transition:transform .3s;
+" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
     <i class="fas fa-shopping-bag"></i>
     <span id="cart-badge" style="
     position:absolute;top:-4px;right:-4px;
@@ -1879,7 +1934,7 @@
     width:20px;height:20px;border-radius:50%;
     font-family:'Roboto Mono',monospace;font-size:10px;font-weight:700;
     display:flex;align-items:center;justify-content:center;
-    border:2px solid #f0f0f0;opacity:0;transform:scale(0);
+    border:2px solid var(--bg);opacity:0;transform:scale(0);
     transition:opacity .2s,transform .2s;
   ">0</span>
   </button>
@@ -1936,6 +1991,26 @@
     ">
         <i class="fab fa-whatsapp" style="font-size:20px"></i>
         Enviar Pedido por WhatsApp
+      </button>
+      <!-- ── Mercado Pago — Próximamente ── -->
+      <button disabled style="
+      width:100%;display:flex;align-items:center;justify-content:center;gap:8px;
+      background:#009ee3;
+      border:1px solid rgba(255,255,255,0.10);
+      backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(8px);
+      color:#fff;border-radius:16px;padding:16px;
+      font-family:'Syne',sans-serif;font-size:15px;font-weight:700;
+      min-height:54px;
+      opacity:0.4;cursor:not-allowed;pointer-events:none;
+    ">
+        <!-- Credit-card icon (Heroicons outline) -->
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="white"
+          stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+          <rect x="1" y="4" width="22" height="16" rx="3" ry="3" />
+          <line x1="1" y1="10" x2="23" y2="10" />
+        </svg>
+        Pagar con Mercado Pago (Próximamente)
       </button>
       <button onclick="clearCart()" style="
       width:100%;background:none;border:1.5px solid rgba(0,0,0,.1);
@@ -2077,7 +2152,13 @@
     <p class="hero-eyebrow">Diseño &amp; Impresión 3D · Posadas, Misiones</p>
     <h1 class="hero-title">Don Gato<br /><span>Labs</span></h1>
     <p class="hero-sub">Donde tus ideas pasan a la tercera dimensión.</p>
-    <div class="bento" id="hero-bento"></div>
+    <div class="hero-carousel" id="hero-carousel">
+      <div class="hc-viewport">
+        <div class="hc-track" id="hc-track"></div>
+      </div>
+      <button class="hc-arrow prev" id="hc-prev" aria-label="Anterior"><i class="fas fa-chevron-left"></i></button>
+      <button class="hc-arrow next" id="hc-next" aria-label="Siguiente"><i class="fas fa-chevron-right"></i></button>
+    </div>
   </section>
 
   <!-- ══════════════════════════════════════════
@@ -2195,10 +2276,10 @@
 
       <!-- ══ BANNER CO-BRANDING ══ -->
       <div style="
-  background: rgba(255,255,255,0.06);
+  background: var(--glass-light);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.10);
+  border: 1px solid var(--border-glass);
   border-radius: 20px;
   box-shadow: 0 4px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.08);
   padding: 28px 24px 24px;
@@ -2226,7 +2307,8 @@
 
           <!-- Logo Don Gato Labs -->
           <!-- REEMPLAZÁ src="" con la URL de tu logo -->
-          <img src="https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGO%20OPTIMO.png"
+          <img id="cobranding-logo"
+            src="https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGO%20OPTIMO.png"
             alt="Don Gato Labs" style="height: 52px; width: auto; object-fit: contain; display: block;"
             onerror="this.style.display='none'; document.getElementById('dgl-fallback').style.display='block';" />
           <!-- Fallback texto si no hay imagen -->
@@ -2290,7 +2372,7 @@
         <!-- Divider -->
         <div style="
     height: 1px;
-    background: rgba(255,255,255,0.08);
+    background: var(--border-glass);
     margin: 16px auto 20px auto;
     max-width: 480px;
   "></div>
@@ -2415,13 +2497,7 @@
           </a>
         </div>
         <!-- Instagram Card -->
-        <div class="contact-card" style="
-  background: rgba(255,255,255,0.18);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(255,255,255,0.45);
-  box-shadow: 0 8px 32px rgba(0,0,0,0.06), inset 0 1px 0 rgba(255,255,255,0.6);
-">
+        <div class="contact-card">
           <p class="contact-type">// VIA INSTAGRAM</p>
 
           <a href="https://instagram.com/dongatolabs" target="_blank" rel="noopener"
@@ -2510,19 +2586,114 @@
          → Si la dejás vacía se muestra el placeholder
     ══════════════════════════════════════════════════════════ */
     const LOGO_URL = "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGO%20OPTIMO.png";
+    const LOGO_DARK_URL = "https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGO%20MODO%20OSCURO.png";
 
     /* ══════════════════════════════════════════════════════════
        RENDER BENTO HERO
     ══════════════════════════════════════════════════════════ */
-    function renderBento() {
-      document.getElementById('hero-bento').innerHTML =
-        productos.slice(0, 6).map((p, i) =>
-          `<div class="bento-cell">${p.url
+    /* ══════════════════════════════════════════════════════════
+       RENDER HERO CAROUSEL
+    ══════════════════════════════════════════════════════════ */
+    (function initHeroCarousel() {
+      const VISIBLE = window.innerWidth < 600 ? 2 : 3;
+      let currentStep = 0;
+      let autoTimer = null;
+
+      function build() {
+        const track = document.getElementById('hc-track');
+        if (!track) return;
+
+        const imgs = productos.map((p, i) => ({ url: p.url, titulo: p.titulo, index: i }));
+
+        track.innerHTML = imgs.map((p, i) =>
+          `<div class="hc-slide" data-i="${i}">${p.url
             ? `<img src="${p.url}" alt="${p.titulo}" loading="lazy"/>`
-            : `<div class="bento-ph"><i class="fas fa-cube"></i><span>IMG ${i + 1}</span></div>`
+            : `<div class="hc-slide-ph"><i class="fas fa-cube"></i><span>IMG ${i + 1}</span></div>`
           }</div>`
         ).join('');
-    }
+
+        const totalSteps = Math.max(0, imgs.length - VISIBLE);
+
+        window.hcGoTo = function (step) {
+          currentStep = Math.max(0, Math.min(step, totalSteps));
+          const slideWidth = track.querySelector('.hc-slide').offsetWidth;
+          const gap = 10;
+          track.style.transform = `translateX(-${currentStep * (slideWidth + gap)}px)`;
+        };
+
+        // Wire arrow buttons
+        const prevBtn = document.getElementById('hc-prev');
+        const nextBtn = document.getElementById('hc-next');
+        if (prevBtn) prevBtn.addEventListener('click', () => { clearInterval(autoTimer); window.hcGoTo(currentStep - 1); startAuto(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { clearInterval(autoTimer); window.hcGoTo(currentStep + 1); startAuto(); });
+
+        function advance() {
+          const next = currentStep < totalSteps ? currentStep + 1 : 0;
+          window.hcGoTo(next);
+        }
+
+        function startAuto() {
+          clearInterval(autoTimer);
+          autoTimer = setInterval(advance, 3500);
+        }
+
+        // ── Drag / swipe support (mouse + touch) ──────────────────
+        const viewport = document.querySelector('.hc-viewport');
+        let dragStartX = null;
+        let isDragging = false;
+        const DRAG_THRESHOLD = 40; // px before a drag counts
+
+        function onDragStart(e) {
+          dragStartX = e.type === 'touchstart' ? e.touches[0].clientX : e.clientX;
+          isDragging = false;
+          clearInterval(autoTimer);
+          track.style.transition = 'none'; // instant follow during drag
+        }
+
+        function onDragMove(e) {
+          if (dragStartX === null) return;
+          const x = e.type === 'touchmove' ? e.touches[0].clientX : e.clientX;
+          const delta = x - dragStartX;
+          if (Math.abs(delta) > 5) isDragging = true;
+          if (e.cancelable) e.preventDefault(); // prevent scroll on touch
+          const slideWidth = track.querySelector('.hc-slide').offsetWidth;
+          const gap = 10;
+          const base = currentStep * (slideWidth + gap);
+          track.style.transform = `translateX(${-base + delta}px)`;
+        }
+
+        function onDragEnd(e) {
+          if (dragStartX === null) return;
+          const x = e.type === 'touchend' ? e.changedTouches[0].clientX : e.clientX;
+          const delta = x - dragStartX;
+          track.style.transition = ''; // restore animated transition
+          if (Math.abs(delta) >= DRAG_THRESHOLD) {
+            if (delta < 0) window.hcGoTo(currentStep + 1);
+            else window.hcGoTo(currentStep - 1);
+          } else {
+            window.hcGoTo(currentStep); // snap back
+          }
+          dragStartX = null;
+          startAuto();
+        }
+
+        // Prevent click on cards when it was actually a drag
+        viewport.addEventListener('click', e => { if (isDragging) e.stopPropagation(); }, true);
+
+        viewport.addEventListener('mousedown', onDragStart);
+        window.addEventListener('mousemove', onDragMove);
+        window.addEventListener('mouseup', onDragEnd);
+
+        viewport.addEventListener('touchstart', onDragStart, { passive: true });
+        viewport.addEventListener('touchmove', onDragMove, { passive: false });
+        viewport.addEventListener('touchend', onDragEnd);
+
+        startAuto();
+      }
+
+      // Run after productos are loaded
+      window._hcBuild = build;
+    })();
 
     /* ══════════════════════════════════════════════════════════
        RENDER PRODUCTS GRID
@@ -2549,12 +2720,21 @@
     /* ══════════════════════════════════════════════════════════
        LOGO INIT
     ══════════════════════════════════════════════════════════ */
+    function setLogoSrc() {
+      const isDark = document.body.classList.contains('dark-mode');
+      const src = isDark ? LOGO_DARK_URL : LOGO_URL;
+      const navLogo = document.getElementById('logo-img');
+      if (navLogo) navLogo.src = src;
+      const cbLogo = document.getElementById('cobranding-logo');
+      if (cbLogo) cbLogo.src = src;
+    }
+
     function initLogo() {
       if (!LOGO_URL) return;
       const img = document.getElementById('logo-img');
-      img.src = LOGO_URL;
       img.style.display = 'block';
       document.getElementById('logo-ph').style.display = 'none';
+      setLogoSrc();
     }
 
     /* ══════════════════════════════════════════════════════════
@@ -2631,7 +2811,7 @@
     }
 
     /* ── INIT ─────────────────────────────────────────────── */
-    renderBento();
+    if (window._hcBuild) window._hcBuild();
     renderProducts();
     initLogo();
 
@@ -2659,6 +2839,7 @@
       const isDark = document.body.classList.contains('dark-mode');
       localStorage.setItem('theme', isDark ? 'dark' : 'light');
       updateDarkModeIcon();
+      if (typeof setLogoSrc === 'function') setLogoSrc();
     });
   </script>
 
@@ -2717,7 +2898,7 @@
     function renderSkeletons() {
       document.getElementById('catalog-grid').innerHTML =
         Array(6).fill(0).map(() =>
-          `<div style="border-radius:var(--r);overflow:hidden;background:rgba(255,255,255,.4);border:1px solid rgba(255,255,255,.5);">
+          `<div style="border-radius:var(--r);overflow:hidden;background:var(--glass-light);border:1px solid var(--border-glass);">
         <div class="skel-img"></div>
         <div class="skel-line"></div>
         <div class="skel-line short"></div>
