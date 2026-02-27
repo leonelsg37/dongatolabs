@@ -4,7 +4,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Don Gato Labs — Diseño e Impresión 3D</title>
+  <title>Don Gato Labs | Mobiliario de Diseño e Impresión 3D</title>
+  <meta name="description"
+    content="Explorá el catálogo de Don Gato Labs: mobiliario de diseño en colaboración con Araucaria Design y piezas en impresión 3D de alta precisión. Innovación y estética funcional desde Posadas, Misiones e Ituzaingó, Corrientes." />
+  <link rel="icon" type="image/png" media="(prefers-color-scheme: light)"
+    href="https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/FAVICON%20MODO%20CLARO.png" />
+  <link rel="icon" type="image/png" media="(prefers-color-scheme: dark)"
+    href="https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/FAVICON%20MODO%20OSCURO.png" />
+  <link rel="icon" type="image/png"
+    href="https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/FAVICON%20MODO%20CLARO.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link
     href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Montserrat:wght@700;800&family=Roboto+Mono:wght@300;400;500&display=swap"
@@ -67,48 +75,6 @@
       overflow-x: hidden;
       -webkit-tap-highlight-color: transparent;
       transition: background 0.3s ease, color 0.3s ease;
-    }
-
-    /* ── Cursor (desktop only) ─────────────── */
-    @media(pointer:fine) {
-      body {
-        cursor: none;
-      }
-
-      #cursor {
-        position: fixed;
-        width: 28px;
-        height: 28px;
-        border: 2px solid var(--accent);
-        border-radius: 50%;
-        pointer-events: none;
-        transform: translate(-50%, -50%);
-        transition: width .18s, height .18s, background .18s;
-        z-index: 9999;
-        mix-blend-mode: multiply;
-      }
-
-      #cursor.expand {
-        width: 52px;
-        height: 52px;
-        background: var(--accent-soft);
-      }
-
-      #cursor-dot {
-        position: fixed;
-        width: 5px;
-        height: 5px;
-        background: var(--accent);
-        border-radius: 50%;
-        pointer-events: none;
-        transform: translate(-50%, -50%);
-        z-index: 10000;
-      }
-
-      a,
-      button {
-        cursor: none;
-      }
     }
 
     /* ── Progress Bar ───────────────────────── */
@@ -455,28 +421,6 @@
 
     .hc-viewport:active {
       cursor: grabbing;
-    }
-
-    /* soft gradient fade on edges */
-    .hc-viewport::before,
-    .hc-viewport::after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      width: 60px;
-      z-index: 2;
-      pointer-events: none;
-    }
-
-    .hc-viewport::before {
-      left: 0;
-      background: linear-gradient(to right, var(--bg), transparent);
-    }
-
-    .hc-viewport::after {
-      right: 0;
-      background: linear-gradient(to left, var(--bg), transparent);
     }
 
     .hc-track {
@@ -1854,6 +1798,29 @@
     .qv-dot.active {
       background: #fff;
     }
+
+    /* ── Responsive FABs (Footer Avoidance) ── */
+    @media (max-width: 600px) {
+      body.footer-visible #ig-float {
+        bottom: calc(88px + 75px) !important;
+      }
+
+      body.footer-visible #wa-float {
+        bottom: calc(20px + 75px) !important;
+      }
+
+      body.footer-visible #cart-float {
+        bottom: calc(156px + 75px) !important;
+      }
+
+      body.footer-visible #dark-mode-toggle {
+        bottom: calc(20px + 75px) !important;
+      }
+
+      body.footer-visible #toast {
+        bottom: calc(90px + 75px) !important;
+      }
+    }
   </style>
 </head>
 
@@ -1869,24 +1836,23 @@
   <div id="cursor"></div>
   <div id="cursor-dot"></div>
 
-  <!-- WhatsApp float — reemplazá TUNUMERO -->
   <!-- Instagram Float -->
   <a id="ig-float" href="https://instagram.com/dongatolabs" target="_blank" rel="noopener" aria-label="Instagram" style="
      position:fixed; bottom:88px; right:20px;
      width:54px; height:54px; border-radius:50%;
-     background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+     background: rgba(225,48,108,0.15);
+     backdrop-filter: blur(16px) saturate(160%);
+     -webkit-backdrop-filter: blur(16px) saturate(160%);
+     border: 1px solid rgba(225,48,108,0.35);
      display:flex; align-items:center; justify-content:center;
-     color:#fff; font-size:22px;
-     box-shadow: 0 8px 24px rgba(238,42,123,0.4);
+     color: #E1306C; font-size:24px;
+     box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1);
      z-index:998; text-decoration:none;
-     transition:transform .3s;
-   " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white"
-      stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
-      <circle cx="12" cy="12" r="4" />
-      <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none" />
-    </svg>
+     transition: transform .3s, box-shadow .3s, bottom .3s ease-out;
+   "
+    onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 8px 32px rgba(225,48,108,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'"
+    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1)'">
+    <i class="fab fa-instagram"></i>
   </a>
 
   <!-- Dark Mode Toggle Float -->
@@ -1901,7 +1867,7 @@
      color: #fff; font-size:22px;
      box-shadow: 0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1);
      z-index:998; cursor: pointer;
-     transition: transform .3s, background .3s;
+     transition: transform .3s, background .3s, bottom .3s ease-out;
   " onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
     <i class="fas fa-moon" id="dark-mode-icon"></i>
   </button>
@@ -1913,7 +1879,7 @@
   border-radius:100px;padding:10px 22px;
   font-size:13px;font-weight:600;
   z-index:2000;opacity:0;pointer-events:none;
-  transition:opacity .25s,transform .25s;
+  transition:opacity .25s,transform .25s, bottom .3s ease-out;
   white-space:nowrap;backdrop-filter:blur(8px);
 "></div>
 
@@ -1942,6 +1908,26 @@
     transition:opacity .2s,transform .2s;
   ">0</span>
   </button>
+
+  <!-- WhatsApp float — reemplazá TUNUMERO -->
+  <a id="wa-float"
+    href="https://wa.me/5493765252495?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
+    target="_blank" rel="noopener" aria-label="WhatsApp" style="
+    position:fixed;bottom:20px;right:20px;
+    width:54px;height:54px;border-radius:50%;
+    background:rgba(37, 211, 102, 0.15);
+    backdrop-filter:blur(16px) saturate(160%);
+    -webkit-backdrop-filter:blur(16px) saturate(160%);
+    border:1px solid rgba(37, 211, 102, 0.35);
+    display:flex;align-items:center;justify-content:center;
+    color:#25D366;font-size:28px;
+    box-shadow:0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1);
+    z-index:998;text-decoration:none;
+    transition: transform .3s, bottom .3s ease-out, box-shadow .3s;
+  " onmouseover="this.style.transform='scale(1.1)';this.style.boxShadow='0 8px 32px rgba(37,211,102,0.3), inset 0 1px 0 rgba(255,255,255,0.2)'"
+    onmouseout="this.style.transform='scale(1)';this.style.boxShadow='0 8px 32px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.1)'">
+    <i class="fab fa-whatsapp"></i>
+  </a>
 
   <!-- ── CART OVERLAY ── -->
   <div id="cart-overlay" onclick="closeCart()" style="
@@ -2098,24 +2084,20 @@
     </div>
   </div>
 
-  <a id="wa-float"
-    href="https://wa.me/5493765252495?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
-    target="_blank" rel="noopener" aria-label="WhatsApp">
-    <i class="fab fa-whatsapp"></i>
-  </a>
-
   <!-- ══════════════════════════════════════════
      NAVBAR
 ══════════════════════════════════════════ -->
   <div id="navbar">
     <nav class="nav-glass bg-transparent bg-none shadow-none drop-shadow-none border-0">
 
-      <div class="logo-wrap bg-transparent bg-none shadow-none drop-shadow-none border-0 z-50" id="logoWrap">
-        <img id="logo-img" src="" alt="Don Gato Labs"
-          class="bg-transparent bg-none shadow-none drop-shadow-none border-0 mix-blend-normal z-50"
-          style="display:none;opacity:1;" />
-        <span id="logo-ph" class="logo-ph">LOGO<br />16:9</span>
-      </div>
+      <a href="#" aria-label="Volver al inicio" style="text-decoration:none; display:flex; align-items:center;">
+        <div class="logo-wrap bg-transparent bg-none shadow-none drop-shadow-none border-0 z-50" id="logoWrap">
+          <img id="logo-img" src="" alt="Don Gato Labs"
+            class="bg-transparent bg-none shadow-none drop-shadow-none border-0 mix-blend-normal z-50"
+            style="display:none;opacity:1;" />
+          <span id="logo-ph" class="logo-ph">LOGO<br />16:9</span>
+        </div>
+      </a>
 
       <ul class="nav-links">
         <li><a href="#quienes">Nosotros</a></li>
@@ -2153,7 +2135,7 @@
 ══════════════════════════════════════════ -->
   <section id="hero">
     <div class="hero-dots"></div>
-    <p class="hero-eyebrow">Diseño &amp; Impresión 3D · Posadas, Misiones</p>
+    <p class="hero-eyebrow">Mobiliario de Diseño &amp; Impresión 3D · Posadas, Misiones</p>
     <h1 class="hero-title">Don Gato<br /><span>Labs</span></h1>
     <p class="hero-sub">Donde tus ideas pasan a la tercera dimensión.</p>
     <div class="hero-carousel" id="hero-carousel">
@@ -2338,11 +2320,11 @@
           </div>
 
           <!-- Logo Socio (clickeable) -->
-          <!-- REEMPLAZÁ href="" con la URL del socio y src="" con su logo -->
-          <a href="" target="_blank" rel="noopener noreferrer" style="display: inline-block; line-height: 0;"
-            title="Visitar sitio del socio">
-            <img src="" alt="Nombre del socio" style="
-          height: 52px; width: auto; object-fit: contain; display: block;
+          <a href="https://www.araucariadesign.com.ar" target="_blank" rel="noopener noreferrer"
+            style="display: inline-block; line-height: 0;" title="Visitar sitio del socio">
+            <img src="https://rfgemfdmjetzimidozaw.supabase.co/storage/v1/object/public/productos/LOGOARAUCARIA.png"
+              alt="Araucaria Design" style="
+          height: 40px; width: auto; object-fit: contain; display: block;
           transition: transform .3s ease, opacity .3s ease;
           filter: brightness(1);
         " onmouseover="this.style.transform='scale(1.06)'; this.style.opacity='.88';"
@@ -2495,7 +2477,7 @@
           </div>
           <!-- ↓ Reemplazá TUNUMERO -->
           <a class="btn-wa"
-            href="https://wa.me/TUNUMERO?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
+            href="https://wa.me/5493765252495?text=Hola%20Don%20Gato%20Labs!%20Mi%20nombre%20es%20%5BNombre%5D%20y%20me%20gustar%C3%ADa%20consultar%20por%20un%20presupuesto%20para%20un%20proyecto%20en%203D."
             target="_blank" rel="noopener">
             Abrir WhatsApp
           </a>
@@ -2552,6 +2534,58 @@
 
           </a>
         </div>
+        <!-- Araucaria Design Card -->
+        <div class="contact-card">
+          <p class="contact-type">// Socio estratégico</p>
+
+          <a href="https://www.instagram.com/designaraucaria" target="_blank" rel="noopener"
+            style="text-decoration:none; display:flex; flex-direction:column; gap:16px;">
+
+            <div style="display:flex; align-items:center; gap:14px;">
+              <!-- Ícono Instagram SVG oficial -->
+              <div style="
+        width:48px; height:48px; border-radius:14px; flex-shrink:0;
+        background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+        display:flex; align-items:center; justify-content:center;
+        box-shadow: 0 4px 16px rgba(238,42,123,0.35);
+      ">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+                  stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                  <circle cx="12" cy="12" r="4" />
+                  <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none" />
+                </svg>
+              </div>
+              <div>
+                <p style="font-size:13px; color:var(--muted); margin-bottom:3px;">Ituzaingó, Corrientes</p>
+                <p class="contact-value"
+                  style="font-size:clamp(18px,3vw,24px); background: linear-gradient(135deg,#ee2a7b,#6228d7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;">
+                  @designaraucaria
+                </p>
+              </div>
+            </div>
+
+            <div style="
+      display:inline-flex; align-items:center; gap:8px;
+      background: linear-gradient(135deg, #f9ce34, #ee2a7b, #6228d7);
+      color:#fff; border-radius:14px; padding:14px 22px;
+      font-family:'Syne',sans-serif; font-size:14px; font-weight:700;
+      min-height:52px; width:100%; justify-content:center;
+      box-shadow: 0 6px 20px rgba(238,42,123,0.3);
+      transition: opacity .2s, transform .2s;
+    " onmouseover="this.style.opacity='.88'; this.style.transform='translateY(-2px)'"
+              onmouseout="this.style.opacity='1'; this.style.transform='translateY(0)'">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                <circle cx="12" cy="12" r="4" />
+                <circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none" />
+              </svg>
+              Ver perfil
+            </div>
+
+          </a>
+        </div>
       </div>
     </div>
   </section>
@@ -2559,6 +2593,19 @@
   <!-- ══════════════════════════════════════════
      FOOTER
 ══════════════════════════════════════════ -->
+  <style>
+    footer {
+      padding: 40px 20px;
+      text-align: center;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    strong {
+      color: var(--text);
+    }
+  </style>
   <footer>
     <p>Don Gato Labs <strong>©</strong> 2026 &nbsp;|&nbsp; Diseñado por <strong>Leonel Gómez</strong>, Lic. en Diseño
       Industrial</p>
@@ -2766,29 +2813,6 @@
       const pct = window.scrollY / (document.documentElement.scrollHeight - window.innerHeight) * 100;
       document.getElementById('progress-bar').style.width = pct + '%';
     }, { passive: true });
-
-    /* ══════════════════════════════════════════════════════════
-       CUSTOM CURSOR — @media (pointer:fine)
-    ══════════════════════════════════════════════════════════ */
-    if (window.matchMedia('(pointer:fine)').matches) {
-      const cursor = document.getElementById('cursor');
-      const dot = document.getElementById('cursor-dot');
-      let mx = -200, my = -200, cx = -200, cy = -200;
-      document.addEventListener('mousemove', e => {
-        mx = e.clientX; my = e.clientY;
-        dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-      });
-      (function tick() {
-        cx += (mx - cx) * .14; cy += (my - cy) * .14;
-        cursor.style.left = cx + 'px'; cursor.style.top = cy + 'px';
-        requestAnimationFrame(tick);
-      })();
-      document.querySelectorAll('a,button,.product-card,.service-card,.feat-card,.bento-cell')
-        .forEach(el => {
-          el.addEventListener('mouseenter', () => cursor.classList.add('expand'));
-          el.addEventListener('mouseleave', () => cursor.classList.remove('expand'));
-        });
-    }
 
     /* ══════════════════════════════════════════════════════════
        INTERSECTION OBSERVER — fade-up
@@ -3296,6 +3320,29 @@
     fetchProducts();
     // inicializar subfiltros según título principal
     generateSubfilters();
+
+    /* ══════════════════════════════════════════════════════════
+       MOBILE FOOTER AVOIDANCE (SCROLL-BASED)
+    ══════════════════════════════════════════════════════════ */
+    window.addEventListener('scroll', () => {
+      if (window.innerWidth > 600) return; // Only process on mobile
+      const footerEl = document.querySelector('footer');
+      if (!footerEl) return;
+      const rect = footerEl.getBoundingClientRect();
+
+      // If the top of the footer has entered the viewport
+      if (rect.top <= window.innerHeight) {
+        document.body.classList.add('footer-visible');
+      } else {
+        document.body.classList.remove('footer-visible');
+      }
+    }, { passive: true });
+
+    // Fallback initial check
+    setTimeout(() => window.dispatchEvent(new Event('scroll')), 500);
+
+
+
   </script>
 </body>
 
